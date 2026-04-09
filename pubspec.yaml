@@ -1,0 +1,43 @@
+name: neuropulse
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # أيقونات Cupertino
+  cupertino_icons: ^1.0.8
+
+  # لو ناوية تستخدم API بعدين
+  http: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  # الصور الخاصة بالمشروع
+  assets:
+    - assets/images/logo.png
+
+  # لو عندك فونتات مخصصة
+  fonts:
+    - family: Schyler
+      fonts:
+        - asset: fonts/Schyler-Regular.ttf
+        - asset: fonts/Schyler-Italic.ttf
+          style: italic
+    - family: TrajanPro
+      fonts:
+        - asset: fonts/TrajanPro.ttf
+        - asset: fonts/TrajanPro_Bold.ttf
+          weight: 700
