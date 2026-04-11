@@ -1,7 +1,46 @@
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  bool _isPasswordHidden = true;
+
+  void _login() {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
+
+    // مثال بسيط: تحقق من بيانات ثابتة
+    if (email == 'user@example.com' && password == 'password') {
+      // نجح الدخول، تنقل للـ home screen
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Invalid email or password')),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +91,7 @@ class LoginScreen extends StatelessWidget {
 
                 /// Email
                 TextField(
+                  controller: _emailController,
                   decoration: InputDecoration(
                     hintText: "Email",
                     filled: true,
@@ -66,13 +106,24 @@ class LoginScreen extends StatelessWidget {
 
                 /// Password
                 TextField(
-                  obscureText: true,
+                  controller: _passwordController,
+                  obscureText: _isPasswordHidden,
                   decoration: InputDecoration(
                     hintText: "Password",
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordHidden ? Icons.visibility_off : Icons.visibility,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordHidden = !_isPasswordHidden;
+                        });
+                      },
                     ),
                   ),
                 ),
@@ -95,26 +146,46 @@ class LoginScreen extends StatelessWidget {
                     backgroundColor: const Color(0xFF4C82B4),
                     minimumSize: const Size(double.infinity, 50),
                   ),
-                  onPressed: () {},
+                  onPressed: _login,
                   child: const Text("Login"),
                 ),
 
                 const SizedBox(height: 15),
 
-                const Text("Don't have an account? Sign up"),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/signup');
+                  },
+                  child: const Text("Don't have an account? Sign up"),
+                ),
 
                 const SizedBox(height: 10),
 
-                const Text("OR"),
+                Row(
+                  children: const [
+                    Expanded(child: Divider()),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Text("OR"),
+                    ),
+                    Expanded(child: Divider()),
+                  ],
+                ),
 
                 const SizedBox(height: 15),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    CircleAvatar(child: Icon(Icons.g_mobiledata)),
-                    SizedBox(width: 20),
-                    CircleAvatar(child: Icon(Icons.facebook)),
+                  children: [
+                    Image.network(
+                      "https://img.icons8.com/color/48/google-logo.png",
+                      width: 30,
+                    ),
+                    const SizedBox(width: 20),
+                    Image.network(
+                      "https://img.icons8.com/color/48/facebook-new.png",
+                      width: 30,
+                    ),
                   ],
                 ),
               ],
