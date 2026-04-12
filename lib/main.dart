@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'NeuroPulse',
 
  
-      initialRoute:   '/',
+      initialRoute:'/',
 
       routes: {
         '/': (context) => const SplashScreen(),

@@ -23,7 +23,7 @@ class _SignupScreenState extends State<SignupScreen> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 30),
               decoration: const BoxDecoration(
-                color: Color(0xFF3E6EA8),
+                color: Color(0xFF4C82B4),
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(60),
                   bottomRight: Radius.circular(60),
@@ -48,7 +48,7 @@ class _SignupScreenState extends State<SignupScreen> {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF3E6EA8),
+                color: Color(0xFF4C82B4),
               ),
             ),
 
@@ -93,7 +93,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF3E6EA8),
+                            backgroundColor: const Color(0xFF4C82B4),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),

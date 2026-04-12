@@ -14,6 +14,9 @@ dependencies:
   # أيقونات Cupertino
   cupertino_icons: ^1.0.8
 
+
+  flutter_svg: ^2.0.7  # 👈 أضف دي
+
   # لو ناوية تستخدم API بعدين
   http: ^1.0.0
 
@@ -28,7 +31,13 @@ flutter:
   # الصور الخاصة بالمشروع
   assets:
     - assets/images/logo.png
-
+    - assets/images/spo2.png
+    - assets/images/heart.png
+    - assets/images/home.svg
+    - assets/images/bot.svg
+    - assets/images/profile.svg
+    - assets/images/setting.svg
+    - assets/images/alert.svg
   # لو عندك فونتات مخصصة
   # fonts:
   #   - family: Schyler
