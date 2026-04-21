@@ -11,15 +11,11 @@ class AlertScreen extends StatefulWidget {
 }
 
 class _AlertScreenState extends State<AlertScreen> {
-  // ---------------------------------------------------------
-  // 💾 المتغيرات التي ستتغير تلقائياً عند ربط الساعة
-  // ---------------------------------------------------------
   String strokeRiskStatus = "High"; 
   int heartRateValue = 145;        
   int oxygenLevel = 82;           
   String aiPredictionTextEn = "High stroke risk";
   String aiPredictionTextAr = "خطر إصابة مرتفع بالسكتة";
-  // ---------------------------------------------------------
 
   // قاموس الترجمة
   Map<String, Map<String, String>> localized = {
