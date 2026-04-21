@@ -28,14 +28,14 @@ class MyApp extends StatelessWidget {
 
       routes: {
 
-        '/': (context) => const ChatScreen(isArabic: false), 
+        '/': (context) => const SplashScreen(), 
 
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignupScreen(),
         '/home': (context) => const HomeScreen(),
         '/settings': (context) => SettingsScreen(),
         '/alert': (context) => AlertScreen(isArabic: false),
-        '/ChatwpatientScreen': (context) => const ChatScreen(isArabic: false),
+        '/ChatwpatientScreen': (context) => const ChatWithPatient(isArabic: false),
         '/PatientDetailsScreen': (context) => const PatientDetails(isArabic: false),
         '/PatientslistScreen': (context) => const PatientsScreen(isArabic: false),
         '/doctordashboard': (context) => const DoctorDashboard(isArabic: false),
