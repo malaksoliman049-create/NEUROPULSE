@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -24,9 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    // مثال بسيط: تحقق من بيانات ثابتة
     if (email == 'user@example.com' && password == 'password') {
-      // نجح الدخول، تنقل للـ home screen
       Navigator.pushReplacementNamed(context, '/home');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -46,153 +45,163 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-      body: Column(
-        children: [
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
 
-          Container(
-            height: 220,
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              color: Color(0xFF4C82B4),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(80),
-                bottomRight: Radius.circular(80),
-              ),
-            ),
-            child: const Center(
-              child: Text(
-                "NeuroPulse",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+            /// Header
+            Container(
+              height: 220,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Color(0xFF4C82B4),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(80),
+                  bottomRight: Radius.circular(80),
                 ),
               ),
-            ),
-          ),
-
-          const SizedBox(height: 30),
-
-          /// Welcome
-          const Text(
-            "Welcome Back",
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF4C82B4),
-            ),
-          ),
-
-          const SizedBox(height: 30),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-
-                /// Email
-                TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    hintText: "Email",
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+              child: const Center(
+                child: Text(
+                  "NeuroPulse",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
+              ),
+            ),
 
-                const SizedBox(height: 15),
+            const SizedBox(height: 30),
 
-                /// Password
-                TextField(
-                  controller: _passwordController,
-                  obscureText: _isPasswordHidden,
-                  decoration: InputDecoration(
-                    hintText: "Password",
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isPasswordHidden ? Icons.visibility_off : Icons.visibility,
+            const Text(
+              "Welcome Back",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF4C82B4),
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+
+                  /// Email
+                  TextField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      hintText: "Email",
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _isPasswordHidden = !_isPasswordHidden;
-                        });
-                      },
                     ),
                   ),
-                ),
 
-                const SizedBox(height: 10),
+                  const SizedBox(height: 15),
 
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {},
-                    child: const Text("Forgot Password?"),
+                  /// Password
+                  TextField(
+                    controller: _passwordController,
+                    obscureText: _isPasswordHidden,
+                    decoration: InputDecoration(
+                      hintText: "Password",
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPasswordHidden
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordHidden = !_isPasswordHidden;
+                          });
+                        },
+                      ),
+                    ),
                   ),
-                ),
 
-                const SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
-                /// Login Button
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF4C82B4),
-                    minimumSize: const Size(double.infinity, 50),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {},
+                      child: const Text("Forgot Password?"),
+                    ),
                   ),
-                  onPressed: _login,
-                  child: const Text("Login"),
-                ),
 
-                const SizedBox(height: 15),
+                  const SizedBox(height: 10),
 
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/signup');
-                  },
-                  child: const Text("Don't have an account? Sign up"),
-                ),
-
-                const SizedBox(height: 10),
-
-                Row(
-                  children: const [
-                    Expanded(child: Divider()),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: Text("OR"),
+                  /// Login Button
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF4C82B4),
+                      minimumSize: const Size(double.infinity, 50),
                     ),
-                    Expanded(child: Divider()),
-                  ],
-                ),
+                    onPressed: _login,
+                    child: const Text("Login"),
+                  ),
 
-                const SizedBox(height: 15),
+                  const SizedBox(height: 15),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.network(
-                      "https://img.icons8.com/color/48/google-logo.png",
-                      width: 30,
-                    ),
-                    const SizedBox(width: 20),
-                    Image.network(
-                      "https://img.icons8.com/color/48/facebook-new.png",
-                      width: 30,
-                    ),
-                  ],
-                ),
-              ],
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/signup');
+                    },
+                    child: const Text("Don't have an account? Sign up"),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Row(
+                    children: const [
+                      Expanded(child: Divider()),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        child: Text("OR"),
+                      ),
+                      Expanded(child: Divider()),
+                    ],
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  /// Social Icons (SVG FIXED)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+
+                      SvgPicture.asset(
+                        "assets/images/google.svg",
+                        width: 35,
+                        height: 35,
+                      ),
+
+                      const SizedBox(width: 25),
+
+                      SvgPicture.asset(
+                        "assets/images/facebook.svg",
+                        width: 35,
+                        height: 35,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

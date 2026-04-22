@@ -10,69 +10,62 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   bool isPasswordHidden = true;
   bool isConfirmPasswordHidden = true;
-  String? selectedGender;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            // 🔵 Header
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 30),
+      body: Stack(
+        children: [
+
+          /// 🔵 الخلفية البيضاء
+          Container(color: Colors.white),
+
+          /// ⚪ الجزء الرمادي
+          Positioned(
+            top: 120, // 🔥 بيبدأ تحت الأزرق
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: const BoxDecoration(
-                color: Color(0xFF4C82B4),
+                color: Color(0xFFF5F5F5),
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(60),
-                  bottomRight: Radius.circular(60),
+                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40),
                 ),
               ),
-              child: const Center(
-                child: Text(
-                  "NeuroPulse",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 10),
-
-            const Text(
-              "Sign-Up",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF4C82B4),
-              ),
-            ),
-
-            const SizedBox(height: 15),
-
-            Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    buildTextField("Name"),
-                    buildTextField("Email"),
-                    buildTextField("Password", isPassword: true),
-                    buildTextField("Confirm Password",
-                        isPassword: true, isConfirm: true),
+                    const SizedBox(height: 60),
+
+                    const Text(
+                      "Sign-Up",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF4C82B4),
+                      ),
+                    ),
 
                     const SizedBox(height: 10),
 
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Expanded(child: buildSmallField("Age")),
-                        const SizedBox(width: 10),
-                        Expanded(child: buildGenderSelector()),
+                        buildStepCircle("1", true),
+                        Container(width: 40, height: 1, color: Colors.grey),
+                        buildStepCircle("2", false),
                       ],
                     ),
+
+                    const SizedBox(height: 20),
+
+                    buildTextField("Name"),
+                    buildTextField("Email"),
+                    buildTextField("Password", isPassword: true),
+                    buildTextField("Confirm Password", isConfirm: true),
 
                     const SizedBox(height: 10),
 
@@ -85,88 +78,93 @@ class _SignupScreenState extends State<SignupScreen> {
 
                     buildTextField("Enter Your Role Here"),
 
-                    const SizedBox(height: 15),
+                    const SizedBox(height: 25),
 
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF4C82B4),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding:
-                                const EdgeInsets.symmetric(vertical: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF4C82B4),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/login');
-                          },
-                          child: const Text("Sign Up"),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
                         ),
+                        onPressed: () {},
+                        child: const Text("Next"),
                       ),
                     ),
 
-                    const SizedBox(height: 10),
-
-                    const SizedBox(height: 10),
-
-                    Row(
-                      children: const [
-                        Expanded(child: Divider()),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          child: Text("OR"),
-                        ),
-                        Expanded(child: Divider()),
-                      ],
-                    ),
-
-                    const SizedBox(height: 10),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.network(
-                          "https://img.icons8.com/color/48/google-logo.png",
-                          width: 30,
-                        ),
-                        const SizedBox(width: 20),
-                        Image.network(
-                          "https://img.icons8.com/color/48/facebook-new.png",
-                          width: 30,
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 25),
                   ],
                 ),
               ),
             ),
-          ],
+          ),
+
+          /// 🔵 الجزء الأزرق (فوق)
+          Container(
+            height: 160,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: Color(0xFF4C82B4),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(80),
+                bottomRight: Radius.circular(80),
+              ),
+            ),
+            child: const Center(
+              child: Text(
+                "NeuroPulse",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Step Circle
+  Widget buildStepCircle(String text, bool active) {
+    return Container(
+      width: 28,
+      height: 28,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: active ? const Color(0xFF4C82B4) : Colors.grey,
+        ),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: active ? const Color(0xFF4C82B4) : Colors.grey,
         ),
       ),
     );
   }
 
-  // 🔹 TextField كبير (مع العين)
+  /// TextField
   Widget buildTextField(String hint,
       {bool isPassword = false, bool isConfirm = false}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: TextField(
-        obscureText: isPassword
+        obscureText: (isPassword || isConfirm)
             ? (isConfirm ? isConfirmPasswordHidden : isPasswordHidden)
             : false,
         decoration: InputDecoration(
           hintText: hint,
           filled: true,
-          fillColor: Colors.grey[100],
-
-          // 👁️ أيقونة العين
-          suffixIcon: isPassword
+          fillColor: Colors.white,
+          suffixIcon: (isPassword || isConfirm)
               ? IconButton(
                   icon: Icon(
                     (isConfirm
@@ -187,70 +185,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   },
                 )
               : null,
-
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,
-          ),
-        ),
-      ),
-    );
-  }
-
-  // 🔹 TextField صغير
-  Widget buildSmallField(String hint) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: hint,
-          filled: true,
-          fillColor: Colors.grey[100],
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildGenderSelector() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade300),
-        ),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton<String>(
-            value: selectedGender,
-            isExpanded: true,
-            icon: const Icon(Icons.arrow_drop_down),
-            items: const [
-              DropdownMenuItem(
-                value: 'Male',
-                child: Text('Male'),
-              ),
-              DropdownMenuItem(
-                value: 'Female',
-                child: Text('Female'),
-              ),
-            ],
-            onChanged: (value) {
-              if (value != null) {
-                setState(() {
-                  selectedGender = value;
-                });
-              }
-            },
-            hint: const Text('Gender'),
-            style: TextStyle(
-              color: selectedGender == null ? Colors.grey.shade700 : Colors.black,
-            ),
           ),
         ),
       ),

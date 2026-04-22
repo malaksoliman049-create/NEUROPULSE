@@ -14,11 +14,14 @@ dependencies:
   # أيقونات Cupertino
   cupertino_icons: ^1.0.8
 
+  # SVG
+  flutter_svg: ^2.0.7  
 
-  flutter_svg: ^2.0.7  # 👈 أضف دي
-
-  # لو ناوية تستخدم API بعدين
+  # API
   http: ^1.0.0
+
+  # Charts
+  fl_chart: ^0.68.0   # 👈 مكانها الصح هنا
 
 dev_dependencies:
   flutter_test:
@@ -38,6 +41,12 @@ flutter:
     - assets/images/profile.svg
     - assets/images/setting.svg
     - assets/images/alert.svg
+    - assets/images/insight.png
+    - assets/images/last.svg
+    - assets/images/facebook.svg
+    - assets/images/google.svg
+    
+
   # لو عندك فونتات مخصصة
   # fonts:
   #   - family: Schyler

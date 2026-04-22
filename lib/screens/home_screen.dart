@@ -1,6 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: HomeScreen(),
+    );
+  }
+}
+
+// 🧠 Model
+class HealthData {
+  final int heartRate;
+  final int spo2;
+  final String lastAlert;
+  final String insight;
+  final bool isConnected;
+  final DateTime? lastSyncTime;
+
+  HealthData({
+    required this.heartRate,
+    required this.spo2,
+    required this.lastAlert,
+    required this.insight,
+    required this.isConnected,
+    this.lastSyncTime,
+  });
+}
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -9,25 +44,119 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool isConnected = true;
-  DateTime? lastSyncTime = DateTime.now();
+  int currentIndex = 0;
 
-  int heartRate = 78;
-  int spo2 = 97;
+  late List<Widget> pages;
 
-  String lastAlert = "High";
-  String insight = "Unstable";
+  @override
+  void initState() {
+    super.initState();
 
-  String getLastSyncText() {
-    if (lastSyncTime == null) return "No Sync";
+    pages = const [
+      HomeContent(),
+      ChatbotScreen(),
+      ProfileScreen(),
+      SettingsScreen(),
+      AlertScreen(),
+    ];
+  }
 
-    final diff = DateTime.now().difference(lastSyncTime!);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: pages[currentIndex],
 
-    if (diff.inMinutes < 1) return "Just now";
-    if (diff.inMinutes < 60) return "${diff.inMinutes} min ago";
-    if (diff.inHours < 24) return "${diff.inHours} hr ago";
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentIndex,
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: const Color(0xFF4C82B4),
+        unselectedItemColor: Colors.grey,
+        onTap: (index) {
+          setState(() {
+            currentIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: navIcon("assets/images/home.svg"),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: navIcon("assets/images/bot.svg"),
+            label: "Chatbot",
+          ),
+          BottomNavigationBarItem(
+            icon: navIcon("assets/images/profile.svg"),
+            label: "Profile",
+          ),
+          BottomNavigationBarItem(
+            icon: navIcon("assets/images/setting.svg"),
+            label: "Setting",
+          ),
+          BottomNavigationBarItem(
+            icon: navIcon("assets/images/alert.svg"),
+            label: "Alert",
+          ),
+        ],
+      ),
+    );
+  }
 
-    return "${diff.inDays} day ago";
+  // 🔥 بدون تغيير ألوان الأيقونات
+  Widget navIcon(String path) {
+    final isSvg = path.endsWith(".svg");
+
+    return isSvg
+        ? SvgPicture.asset(
+            path,
+            width: 24,
+          )
+        : Image.asset(
+            path,
+            width: 24,
+          );
+  }
+}
+
+// 🏠 Home Content
+class HomeContent extends StatefulWidget {
+  const HomeContent({super.key});
+
+  @override
+  State<HomeContent> createState() => _HomeContentState();
+}
+
+class _HomeContentState extends State<HomeContent> {
+  HealthData data = HealthData(
+    heartRate: 78,
+    spo2: 97,
+    lastAlert: "High",
+    insight: "Unstable",
+    isConnected: true,
+    lastSyncTime: DateTime.now(),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    await Future.delayed(const Duration(seconds: 1));
+
+    if (!mounted) return;
+
+    setState(() {
+      data = HealthData(
+        heartRate: 80,
+        spo2: 95,
+        lastAlert: "Normal",
+        insight: "Stable",
+        isConnected: true,
+        lastSyncTime: DateTime.now(),
+      );
+    });
   }
 
   @override
@@ -35,213 +164,195 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFEFEFEF),
       body: SafeArea(
-        child: Column(
-          children: [
-            // 🔵 Header
-            ClipPath(
-              clipper: HeaderClipper(),
-              child: Container(
-                width: double.infinity,
-                height: 120,
-                color: const Color(0xFF4C82B4),
-                child: const Center(
-                  child: Text(
-                    "NeuroPulse",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // 🔵 Header
+              ClipPath(
+                clipper: HeaderClipper(),
+                child: Container(
+                  width: double.infinity,
+                  height: 120,
+                  color: const Color(0xFF4C82B4),
+                  child: const Center(
+                    child: Text(
+                      "NeuroPulse",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 10),
+              const SizedBox(height: 20),
 
-            // 🔌 Connection Status
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                isConnected
-                    ? "Connected to smart watch"
-                    : "Smart watch not connected",
-                style: TextStyle(
-                  color: isConnected ? Colors.green : Colors.red,
-                  fontWeight: FontWeight.bold,
+              // ❤️ Cards
+              if (data.isConnected) ...[
+                buildCard(
+                  "assets/images/heart.png",
+                  "Heart Rate",
+                  "${data.heartRate} bpm",
                 ),
-              ),
-            ),
+                buildCard(
+                  "assets/images/spo2.png",
+                  "SpO₂",
+                  "${data.spo2}%",
+                ),
+                buildCard(
+                  "assets/images/last.svg",
+                  "Last Alert",
+                  data.lastAlert,
+                ),
+                buildCard(
+                  "assets/images/insight.png",
+                  "Insight",
+                  data.insight,
+                ),
+              ],
 
-            const SizedBox(height: 10),
+              if (!data.isConnected)
+                const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text(
+                    "Please connect your smart watch",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
 
-            // ⏱️ Last Sync
-            if (isConnected)
-              buildMainCard("Last Sync: ${getLastSyncText()}"),
+              const SizedBox(height: 10),
 
-            const SizedBox(height: 10),
+              buildGrayButton("Health History"),
 
-            // ❤️ Data
-            if (isConnected) ...[
-              buildCard(
-                icon: Image.asset("assets/images/heart.png", width: 24),
-                title: "Heart Rate",
-                value: "$heartRate bpm",
-              ),
-              buildCard(
-                icon: Image.asset("assets/images/spo2.png", width: 24),
-                title: "SpO₂",
-                value: "$spo2%",
-              ),
-              buildCard(
-                icon: const Icon(Icons.warning, color: Colors.yellow),
-                title: "Last Alert",
-                value: lastAlert,
-              ),
-              buildCard(
-                icon: const Icon(Icons.lightbulb, color: Colors.yellow),
-                title: "Insight",
-                value: insight,
-              ),
+              const SizedBox(height: 20),
             ],
-
-            if (!isConnected)
-              const Padding(
-                padding: EdgeInsets.all(16),
-                child: Text(
-                  "Please connect your smart watch",
-                  style: TextStyle(color: Colors.red),
-                ),
-              ),
-
-            const SizedBox(height: 10),
-
-            // ⚪ Health History
-            buildGrayButton("Health History"),
-
-            const Spacer(),
-
-            // 🔻 Bottom Nav
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              color: Colors.grey[300],
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  buildNavItem("assets/images/home.svg", "Home"),
-                  buildNavItem("assets/images/chatbot.svg", "Chatbot"),
-                  buildNavItem("assets/images/profile.svg", "Profile"),
-                  buildNavItem("assets/images/setting.svg", "Setting"),
-                  buildNavItem("assets/images/alert.svg", "Alert"),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // 🔵 Main Card (Last Sync)
-  Widget buildMainCard(String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        decoration: BoxDecoration(
-          color: const Color(0xFF4C82B4),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Center(
-          child: Text(
-            text,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
           ),
         ),
       ),
     );
   }
 
-  // 🔹 Card
-  Widget buildCard({
-    required Widget icon,
-    required String title,
-    required String value,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: const Color(0xFF4C82B4),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Row(
-          children: [
-            icon,
-            const SizedBox(width: 10),
-            Text(
-              title,
-              style: const TextStyle(color: Colors.white),
+  // 📦 Card (بدون تغيير لون الأيقونة)
+  Widget buildCard(String iconPath, String title, String value) {
+    final isSvg = iconPath.endsWith(".svg");
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF4C82B4),
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Row(
+        children: [
+          isSvg
+              ? SvgPicture.asset(
+                  iconPath,
+                  width: 30,
+                  height: 30,
+                )
+              : Image.asset(
+                  iconPath,
+                  width: 30,
+                  height: 30,
+                ),
+
+          const SizedBox(width: 12),
+
+          Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
             ),
-            const Spacer(),
-            Text(
-              value,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
+          ),
+
+          const Spacer(),
+
+          Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  // ⚪ Gray Button
   Widget buildGrayButton(String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const SizedBox(width: 10),
-            Text(
-              text,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const Icon(Icons.arrow_forward_ios, size: 16),
-          ],
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      decoration: BoxDecoration(
+        color: Colors.grey[300],
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Center(
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
         ),
       ),
-    );
-  }
-
-  // 🔻 Bottom Nav Item
-  Widget buildNavItem(String icon, String label) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SvgPicture.asset(icon, width: 24),
-        const SizedBox(height: 5),
-        Text(label, style: const TextStyle(fontSize: 11)),
-      ],
     );
   }
 }
 
-// ✂️ Header Curve
+// 📱 Screens
+class ChatbotScreen extends StatelessWidget {
+  const ChatbotScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(child: Text("Chatbot Screen")),
+    );
+  }
+}
+
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(child: Text("Profile Screen")),
+    );
+  }
+}
+
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(child: Text("Settings Screen")),
+    );
+  }
+}
+
+class AlertScreen extends StatelessWidget {
+  const AlertScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(child: Text("Alert Screen")),
+    );
+  }
+}
+
+// ✂️ Header Shape
 class HeaderClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
