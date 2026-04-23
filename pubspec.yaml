@@ -45,6 +45,9 @@ flutter:
     - assets/images/last.svg
     - assets/images/facebook.svg
     - assets/images/google.svg
+    - assets/images/active.png
+    - assets/images/total pa.png
+    - assets/images/risk.png
     
 
   # لو عندك فونتات مخصصة
