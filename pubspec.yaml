@@ -11,17 +11,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # أيقونات Cupertino
   cupertino_icons: ^1.0.8
-
-  # SVG
-  flutter_svg: ^2.0.7  
-
-  # API
+  flutter_svg: ^2.0.7
+  provider: ^6.1.2
   http: ^1.0.0
-
-  # Charts
-  fl_chart: ^0.68.0   # 👈 مكانها الصح هنا
+  fl_chart: ^0.68.0
 
 dev_dependencies:
   flutter_test:
@@ -31,7 +25,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # الصور الخاصة بالمشروع
   assets:
     - assets/images/logo.png
     - assets/images/spo2.png
@@ -48,17 +41,11 @@ flutter:
     - assets/images/active.png
     - assets/images/total pa.png
     - assets/images/risk.png
-    
-
-  # لو عندك فونتات مخصصة
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: TrajanPro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+    - assets/images/age.png
+    - assets/images/height.png
+    - assets/images/weight.svg
+    - assets/images/smoking.svg
+    - assets/images/man.png
+    - assets/images/Disease.png
+    - assets/images/patient.svg
+    - assets/images/chat.svg

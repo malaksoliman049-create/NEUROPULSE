@@ -1,30 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+import '../providers/language_provider.dart';
+import '../screens/header_clipper.dart';
+import 'health_history.dart';
+import 'chatbot_screen.dart';
+import 'alert_screen.dart';
+import 'Profile_screen.dart';
+import 'Settings_screen.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+// ================= MODEL =================
 
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
-    );
-  }
-}
-
-// 🧠 Model
 class HealthData {
   final int heartRate;
   final int spo2;
   final String lastAlert;
   final String insight;
   final bool isConnected;
-  final DateTime? lastSyncTime;
 
   HealthData({
     required this.heartRate,
@@ -32,9 +25,10 @@ class HealthData {
     required this.lastAlert,
     required this.insight,
     required this.isConnected,
-    this.lastSyncTime,
   });
 }
+
+// ================= HOME SCREEN =================
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -46,81 +40,121 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 0;
 
-  late List<Widget> pages;
+  // وظيفة لمساعدة التنقل وإعادة التصفير عند العودة
+  void _navigateToPage(Widget page, int index) {
+    setState(() {
+      currentIndex = index; // جعل الأيقونة تنور أزرق عند الضغط
+    });
 
-  @override
-  void initState() {
-    super.initState();
-
-    pages = const [
-      HomeContent(),
-      ChatbotScreen(),
-      ProfileScreen(),
-      SettingsScreen(),
-      AlertScreen(),
-    ];
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => page),
+    ).then((_) {
+      // ✨ هذا الكود يتنفذ فوراً عند الرجوع (Back) من الشاشة المفتوحة
+      setState(() {
+        currentIndex = 0; // إعادة اللون الأزرق لأيقونة الهوم
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: pages[currentIndex],
+    final isArabic = Provider.of<LanguageProvider>(context).isArabic;
 
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: const Color(0xFF4C82B4),
-        unselectedItemColor: Colors.grey,
-        onTap: (index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: navIcon("assets/images/home.svg"),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: navIcon("assets/images/bot.svg"),
-            label: "Chatbot",
-          ),
-          BottomNavigationBarItem(
-            icon: navIcon("assets/images/profile.svg"),
-            label: "Profile",
-          ),
-          BottomNavigationBarItem(
-            icon: navIcon("assets/images/setting.svg"),
-            label: "Setting",
-          ),
-          BottomNavigationBarItem(
-            icon: navIcon("assets/images/alert.svg"),
-            label: "Alert",
-          ),
-        ],
+    return Directionality(
+      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+      child: Scaffold(
+        body: HomeContent(isArabic: isArabic),
+
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: currentIndex,
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: const Color(0xFF4C82B4),
+          unselectedItemColor: Colors.grey,
+
+          onTap: (index) {
+            if (index == 0) {
+              setState(() => currentIndex = 0);
+            } else if (index == 1) {
+              _navigateToPage(const ChatbotScreen(), 1);
+            } else if (index == 2) {
+              _navigateToPage(const AlertScreen(), 2);
+            } else if (index == 3) {
+              _navigateToPage(const ProfileScreen(), 3);
+            } else if (index == 4) {
+              _navigateToPage(const SettingsScreen(), 4);
+            }
+          },
+
+          items: [
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                "assets/images/home.svg", 
+                width: 24,
+                colorFilter: ColorFilter.mode(
+                  currentIndex == 0 ? const Color(0xFF4C82B4) : Colors.grey, 
+                  BlendMode.srcIn
+                ),
+              ),
+              label: isArabic ? "الرئيسية" : "Home",
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                "assets/images/bot.svg", 
+                width: 24,
+                colorFilter: ColorFilter.mode(
+                  currentIndex == 1 ? const Color(0xFF4C82B4) : Colors.grey, 
+                  BlendMode.srcIn
+                ),
+              ),
+              label: isArabic ? "المحادثة" : "Chatbot",
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                "assets/images/alert.svg", 
+                width: 24,
+                colorFilter: ColorFilter.mode(
+                  currentIndex == 2 ? const Color(0xFF4C82B4) : Colors.grey, 
+                  BlendMode.srcIn
+                ),
+              ),
+              label: isArabic ? "تنبيه" : "Alert",
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                "assets/images/profile.svg", 
+                width: 24,
+                colorFilter: ColorFilter.mode(
+                  currentIndex == 3 ? const Color(0xFF4C82B4) : Colors.grey, 
+                  BlendMode.srcIn
+                ),
+              ),
+              label: isArabic ? "البروفايل" : "Profile",
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                "assets/images/setting.svg", 
+                width: 24,
+                colorFilter: ColorFilter.mode(
+                  currentIndex == 4 ? const Color(0xFF4C82B4) : Colors.grey, 
+                  BlendMode.srcIn
+                ),
+              ),
+              label: isArabic ? "الإعدادات" : "Setting",
+            ),
+          ],
+        ),
       ),
     );
   }
-
-  // 🔥 بدون تغيير ألوان الأيقونات
-  Widget navIcon(String path) {
-    final isSvg = path.endsWith(".svg");
-
-    return isSvg
-        ? SvgPicture.asset(
-            path,
-            width: 24,
-          )
-        : Image.asset(
-            path,
-            width: 24,
-          );
-  }
 }
 
-// 🏠 Home Content
+// ================= HOME CONTENT =================
+
 class HomeContent extends StatefulWidget {
-  const HomeContent({super.key});
+  final bool isArabic;
+
+  const HomeContent({super.key, required this.isArabic});
 
   @override
   State<HomeContent> createState() => _HomeContentState();
@@ -133,31 +167,26 @@ class _HomeContentState extends State<HomeContent> {
     lastAlert: "High",
     insight: "Unstable",
     isConnected: true,
-    lastSyncTime: DateTime.now(),
   );
 
-  @override
-  void initState() {
-    super.initState();
-    fetchData();
-  }
+  Map<String, Map<String, String>> tMap = {
+    'en': {
+      'heart': 'Heart Rate',
+      'spo2': 'SpO₂',
+      'alert': 'Last Alert',
+      'insight': 'Insight',
+      'history': 'Health History',
+    },
+    'ar': {
+      'heart': 'نبض القلب',
+      'spo2': 'الأكسجين',
+      'alert': 'آخر تنبيه',
+      'insight': 'التقييم',
+      'history': 'تاريخ الصحة',
+    }
+  };
 
-  Future<void> fetchData() async {
-    await Future.delayed(const Duration(seconds: 1));
-
-    if (!mounted) return;
-
-    setState(() {
-      data = HealthData(
-        heartRate: 80,
-        spo2: 95,
-        lastAlert: "Normal",
-        insight: "Stable",
-        isConnected: true,
-        lastSyncTime: DateTime.now(),
-      );
-    });
-  }
+  String t(String key) => tMap[widget.isArabic ? 'ar' : 'en']![key]!;
 
   @override
   Widget build(BuildContext context) {
@@ -167,12 +196,11 @@ class _HomeContentState extends State<HomeContent> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // 🔵 Header
               ClipPath(
                 clipper: HeaderClipper(),
                 child: Container(
-                  width: double.infinity,
                   height: 120,
+                  width: double.infinity,
                   color: const Color(0xFF4C82B4),
                   child: const Center(
                     child: Text(
@@ -189,42 +217,24 @@ class _HomeContentState extends State<HomeContent> {
 
               const SizedBox(height: 20),
 
-              // ❤️ Cards
-              if (data.isConnected) ...[
-                buildCard(
-                  "assets/images/heart.png",
-                  "Heart Rate",
-                  "${data.heartRate} bpm",
-                ),
-                buildCard(
-                  "assets/images/spo2.png",
-                  "SpO₂",
-                  "${data.spo2}%",
-                ),
-                buildCard(
-                  "assets/images/last.svg",
-                  "Last Alert",
-                  data.lastAlert,
-                ),
-                buildCard(
-                  "assets/images/insight.png",
-                  "Insight",
-                  data.insight,
-                ),
-              ],
+              buildCard("assets/images/heart.png", t('heart'), "${data.heartRate} bpm"),
+              buildCard("assets/images/spo2.png", t('spo2'), "${data.spo2}%"),
+              buildCard("assets/images/last.svg", t('alert'), data.lastAlert),
+              buildCard("assets/images/insight.png", t('insight'), data.insight),
 
-              if (!data.isConnected)
-                const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Text(
-                    "Please connect your smart watch",
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ),
+              const SizedBox(height: 20),
 
-              const SizedBox(height: 10),
-
-              buildGrayButton("Health History"),
+              buildGrayButton(
+                t('history'),
+                () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HealthHistoryScreen(),
+                    ),
+                  );
+                },
+              ),
 
               const SizedBox(height: 20),
             ],
@@ -234,13 +244,12 @@ class _HomeContentState extends State<HomeContent> {
     );
   }
 
-  // 📦 Card (بدون تغيير لون الأيقونة)
   Widget buildCard(String iconPath, String title, String value) {
     final isSvg = iconPath.endsWith(".svg");
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: const Color(0xFF4C82B4),
         borderRadius: BorderRadius.circular(18),
@@ -248,131 +257,35 @@ class _HomeContentState extends State<HomeContent> {
       child: Row(
         children: [
           isSvg
-              ? SvgPicture.asset(
-                  iconPath,
-                  width: 30,
-                  height: 30,
-                )
-              : Image.asset(
-                  iconPath,
-                  width: 30,
-                  height: 30,
-                ),
-
+              ? SvgPicture.asset(iconPath, width: 30)
+              : Image.asset(iconPath, width: 30),
           const SizedBox(width: 12),
-
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-
+          Text(title, style: const TextStyle(color: Colors.white)),
           const Spacer(),
-
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
+          Text(value, style: const TextStyle(color: Colors.white)),
         ],
       ),
     );
   }
 
-  Widget buildGrayButton(String text) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Center(
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 15,
+  Widget buildGrayButton(String text, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.all(16),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.grey[300],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
       ),
     );
   }
-}
-
-// 📱 Screens
-class ChatbotScreen extends StatelessWidget {
-  const ChatbotScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text("Chatbot Screen")),
-    );
-  }
-}
-
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text("Profile Screen")),
-    );
-  }
-}
-
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text("Settings Screen")),
-    );
-  }
-}
-
-class AlertScreen extends StatelessWidget {
-  const AlertScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text("Alert Screen")),
-    );
-  }
-}
-
-// ✂️ Header Shape
-class HeaderClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-
-    path.lineTo(0, size.height - 30);
-
-    path.quadraticBezierTo(
-      size.width / 2,
-      size.height + 30,
-      size.width,
-      size.height - 30,
-    );
-
-    path.lineTo(size.width, 0);
-    path.close();
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
