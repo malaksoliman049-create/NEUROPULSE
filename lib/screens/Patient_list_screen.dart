@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../providers/language_provider.dart';
 import 'patient_details_screen.dart';
 
@@ -13,220 +14,339 @@ class PatientListScreen extends StatefulWidget {
 
 class _PatientListScreenState
     extends State<PatientListScreen> {
-  final List<Map<String, String>> patientsData = [
-    {"name": "Ali Ahmed", "risk": "High", "status": "Critical"},
-    {"name": "Sara Hassan", "risk": "Medium", "status": "Under Observation"},
-    {"name": "Ziad Khalil", "risk": "Low", "status": "Stable"},
-    {"name": "Mona Omar", "risk": "High", "status": "Critical"},
-  ];
 
-  Map<String, String>? selectedPatient;
+  final List<Map<String, String>> patientsData = [
+
+    {
+      "name": "Ali Ahmed",
+      "age": "57 y",
+      "risk": "High Risk",
+      "image": "assets/images/patient1.png",
+    },
+
+    {
+      "name": "Mohamed Ahmed",
+      "age": "60 y",
+      "risk": "Medium Risk",
+      "image": "assets/images/patient2.png",
+    },
+
+    {
+      "name": "Sara Ahmed",
+      "age": "40 y",
+      "risk": "High Risk",
+      "image": "assets/images/patient3.png",
+    },
+
+    {
+      "name": "Naira Ahmed",
+      "age": "55y",
+      "risk": "Low Risk",
+      "image": "assets/images/patient4.png",
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
+
     final isArabic =
-        Provider.of<LanguageProvider>(context).isArabic;
+        Provider.of<LanguageProvider>(context)
+            .isArabic;
 
     String t(String en, String ar) =>
         isArabic ? ar : en;
 
-    Color getRiskColor(String risk) {
-      if (risk == "High") return const Color(0xFFD32F2F);
-      if (risk == "Medium") return const Color(0xFF4C82B4);
-      return Colors.green;
-    }
+    final primaryColor =
+        const Color(0xFF4C82B4);
 
     return Directionality(
+
       textDirection:
-          isArabic ? TextDirection.rtl : TextDirection.ltr,
+          isArabic
+              ? TextDirection.rtl
+              : TextDirection.ltr,
+
       child: Scaffold(
+
         backgroundColor: Colors.white,
+
         body: Column(
           children: [
 
-            // HEADER
+            /// 🔵 HEADER
             Stack(
               children: [
-                Container(
-                  height: 150,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF4C82B4),
-                    borderRadius: BorderRadius.vertical(
-                      bottom: Radius.elliptical(200, 50),
-                    ),
-                  ),
-                ),
 
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 60),
-                    child: Text(
-                      t("Patients List", "قائمة المرضى"),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                Container(
+
+                  height: 160,
+
+                  decoration:
+                      const BoxDecoration(
+
+                    color: Color(0xFF4C82B4),
+
+                    borderRadius:
+                        BorderRadius.vertical(
+                      bottom:
+                          Radius.elliptical(
+                        250,
+                        50,
                       ),
                     ),
                   ),
                 ),
 
                 Positioned(
+
                   top: 50,
-                  left: isArabic ? null : 10,
-                  right: isArabic ? 10 : null,
+
+                  left:
+                      isArabic ? null : 10,
+
+                  right:
+                      isArabic ? 10 : null,
+
                   child: IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.arrow_back,
-                        color: Colors.white),
+
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+
+                const Positioned(
+
+                  top: 65,
+                  left: 0,
+                  right: 0,
+
+                  child: Center(
+                    child: Text(
+                      "Patients",
+
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight:
+                            FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
 
-            // SEARCH
+            /// 🔍 Search
             Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 20, vertical: 15),
+
+              padding:
+                  const EdgeInsets.symmetric(
+                horizontal: 15,
+                vertical: 18,
+              ),
+
               child: TextField(
-                textAlign:
-                    isArabic ? TextAlign.right : TextAlign.left,
+
                 decoration: InputDecoration(
-                  hintText:
-                      t("Search patient...", "ابحث عن مريض..."),
-                  prefixIcon: const Icon(Icons.search),
+
+                  hintText: t(
+                    "Search patient...",
+                    "ابحث عن مريض...",
+                  ),
+
+                  prefixIcon:
+                      const Icon(Icons.search),
+
                   filled: true,
-                  fillColor: Colors.grey[100],
+
+                  fillColor:
+                      Colors.grey.shade100,
+
                   border: OutlineInputBorder(
+
                     borderRadius:
-                        BorderRadius.circular(15),
-                    borderSide: BorderSide.none,
+                        BorderRadius.circular(
+                      15,
+                    ),
+
+                    borderSide:
+                        BorderSide.none,
                   ),
                 ),
               ),
             ),
 
-            // TABLE
+            /// 👨‍⚕️ Patients List
             Expanded(
-              child: Padding(
+
+              child: ListView.builder(
+
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 15),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE3F2FD)
-                        .withValues(alpha: 0.5),
-                    borderRadius:
-                        BorderRadius.circular(20),
-                    border: Border.all(
-                      color: const Color(0xFF4C82B4)
-                          .withValues(alpha: 0.2),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
-                          children: [
-                            _tableHeader(
-                                t("Patient Name", "اسم المريض")),
-                            _tableHeader(
-                                t("Risk Level", "مستوى الخطر")),
-                            _tableHeader(
-                                t("Status", "الحالة")),
-                          ],
+                    const EdgeInsets.symmetric(
+                  horizontal: 12,
+                ),
+
+                itemCount:
+                    patientsData.length,
+
+                itemBuilder:
+                    (context, index) {
+
+                  final patient =
+                      patientsData[index];
+
+                  return InkWell(
+
+                    onTap: () {
+
+                      Navigator.push(
+
+                        context,
+
+                        MaterialPageRoute(
+                          builder:
+                              (context) =>
+                                  const PatientDetails(),
+                        ),
+                      );
+                    },
+
+                    child: Container(
+
+                      margin:
+                          const EdgeInsets.only(
+                        bottom: 18,
+                      ),
+
+                      padding:
+                          const EdgeInsets.all(
+                        12,
+                      ),
+
+                      decoration:
+                          BoxDecoration(
+
+                        color:
+                            Colors.grey.shade200,
+
+                        borderRadius:
+                            BorderRadius.circular(
+                          16,
                         ),
                       ),
 
-                      const Divider(),
+                      child: Row(
+                        children: [
 
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: patientsData.length,
-                          itemBuilder: (context, index) {
-                            final p = patientsData[index];
+                          /// 🖼 صورة المريض
+                          CircleAvatar(
 
-                            return InkWell(
-                              onTap: () {
-                                setState(() {
-                                  selectedPatient = p;
-                                });
-                              },
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.all(10),
-                                child: Row(
+                            radius: 28,
+
+                            backgroundColor:
+                                Colors.white,
+
+                            backgroundImage:
+                                AssetImage(
+                              patient['image']!,
+                            ),
+                          ),
+
+                          const SizedBox(width: 15),
+
+                          /// 📄 البيانات
+                          Expanded(
+
+                            child: Column(
+
+                              crossAxisAlignment:
+                                  CrossAxisAlignment
+                                      .start,
+
+                              children: [
+
+                                Text(
+                                  patient['name']!,
+
+                                  style:
+                                      TextStyle(
+                                    color:
+                                        primaryColor,
+
+                                    fontWeight:
+                                        FontWeight
+                                            .bold,
+
+                                    fontSize: 18,
+                                  ),
+                                ),
+
+                                const SizedBox(
+                                  height: 6,
+                                ),
+
+                                Row(
                                   children: [
-                                    _tableCell(
-                                        p['name']!,
-                                        Colors.black,
-                                        isBold: true),
-                                    _tableCell(
-                                        p['risk']!,
-                                        getRiskColor(
-                                            p['risk']!)),
-                                    _tableCell(
-                                        p['status']!,
-                                        getRiskColor(
-                                            p['risk']!)),
+
+                                    Text(
+                                      patient['age']!,
+
+                                      style:
+                                          const TextStyle(
+                                        fontSize:
+                                            16,
+                                        fontWeight:
+                                            FontWeight
+                                                .bold,
+                                      ),
+                                    ),
+
+                                    const SizedBox(
+                                      width: 20,
+                                    ),
+
+                                    Text(
+                                      patient[
+                                          'risk']!,
+
+                                      style:
+                                          TextStyle(
+                                        fontSize:
+                                            16,
+
+                                        color:
+                                            patient['risk'] ==
+                                                    "High Risk"
+                                                ? Colors.red
+                                                : patient['risk'] ==
+                                                        "Medium Risk"
+                                                    ? primaryColor
+                                                    : Colors.green,
+
+                                        fontWeight:
+                                            FontWeight
+                                                .bold,
+                                      ),
+                                    ),
                                   ],
                                 ),
-                              ),
-                            );
-                          },
-                        ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-            // BUTTON
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: ElevatedButton(
-                onPressed: selectedPatient == null
-                    ? null
-                    : () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                      builder: (_) => const PatientDetails(),
-                            )
-                        );
-                      },
-                child: Text(
-                  t("View Full Records",
-                      "عرض السجلات الكاملة"),
-                ),
+                    ),
+                  );
+                },
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _tableHeader(String text) {
-    return Expanded(
-      child: Text(text,
-          textAlign: TextAlign.center,
-          style:
-              const TextStyle(fontWeight: FontWeight.bold)),
-    );
-  }
-
-  Widget _tableCell(String text, Color color,
-      {bool isBold = false}) {
-    return Expanded(
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: color,
-          fontWeight:
-              isBold ? FontWeight.bold : FontWeight.normal,
         ),
       ),
     );

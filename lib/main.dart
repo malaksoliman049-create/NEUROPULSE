@@ -5,6 +5,8 @@ import 'providers/language_provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/Profile_info_screen.dart';
+import 'screens/profile_info_signup.dart';
+import 'screens/doctors_appointments.dart';
 import 'screens/home_screen.dart';
 import 'screens/health_history.dart';
 import 'screens/Doctor_dashboard_screen.dart';
@@ -54,6 +56,8 @@ class RootApp extends StatelessWidget {
         '/login': (_) => const LoginScreen(),
         '/signup': (_) => const SignupScreen(),
         '/profile_info': (_) => const ProfileInfoScreen(),
+        '/profile_info_signup': (_) => const ProfileInfoSignup(),
+        '/doctors_appointments': (_) => const DoctorsAppointments(),
         '/home': (_) => const HomeScreen(),
         '/health_history': (_) => const HealthHistoryScreen(),
         '/doctor_dashboard': (_) => const DoctorDashboardScreen(),
