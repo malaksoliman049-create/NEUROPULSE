@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/language_provider.dart';
@@ -9,46 +10,62 @@ class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<SignupScreen> createState() =>
+      _SignupScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SignupScreenState
+    extends State<SignupScreen> {
 
   bool isPasswordHidden = true;
   bool isConfirmPasswordHidden = true;
 
   String? selectedRole;
 
-  Map<String, Map<String, String>> localized = {
+  Map<String, Map<String, String>>
+      localized = {
 
     'en': {
+
       'title': 'Sign-Up',
-      'step1': 'Are you a Patient or a Dr?',
+      'step1':
+          'Are you a Patient or a Dr?',
       'role': 'Select Your Role',
       'doctor': 'Doctor',
       'patient': 'Patient',
       'name': 'Name',
       'email': 'Email',
       'password': 'Password',
-      'confirm': 'Confirm Password',
+      'confirm':
+          'Confirm Password',
       'next': 'Next',
     },
 
     'ar': {
+
       'title': 'إنشاء حساب',
-      'step1': 'هل أنت مريض أم طبيب؟',
+      'step1':
+          'هل أنت مريض أم طبيب؟',
       'role': 'اختر النوع',
       'doctor': 'طبيب',
       'patient': 'مريض',
       'name': 'الاسم',
-      'email': 'البريد الإلكتروني',
-      'password': 'كلمة المرور',
-      'confirm': 'تأكيد كلمة المرور',
-      'next': 'التالي',
+      'email':
+          'البريد الإلكتروني',
+      'password':
+          'كلمة المرور',
+      'confirm':
+          'تأكيد كلمة المرور',
+      'next':
+          'التالي',
     }
   };
 
-  String t(String key, bool isArabic) {
+  String t(
+    String key,
+    bool isArabic,
+  ) {
+
     return localized[
         isArabic ? 'ar' : 'en']![key]!;
   }
@@ -56,163 +73,273 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
 
-    final langProvider =
-        Provider.of<LanguageProvider>(context);
-
     final isArabic =
-        langProvider.isArabic;
+        Provider.of<LanguageProvider>(
+          context,
+        ).isArabic;
 
-    final primaryColor =
-        const Color(0xFF4C82B4);
+    const primaryColor =
+        Color(0xFF4C82B4);
 
-    return Directionality(
+    return AnnotatedRegion<
+        SystemUiOverlayStyle>(
 
-      textDirection:
-          isArabic
-              ? TextDirection.rtl
-              : TextDirection.ltr,
+      value:
+          const SystemUiOverlayStyle(
+        statusBarColor:
+            Colors.transparent,
 
-      child: Scaffold(
+        statusBarIconBrightness:
+            Brightness.light,
+      ),
 
-        body: Stack(
-          children: [
+      child: Directionality(
 
-            /// 🔵 الخلفية
-            Container(
-              color: Colors.white,
-            ),
+        textDirection:
+            isArabic
+                ? TextDirection.rtl
+                : TextDirection.ltr,
 
-            /// 📄 المحتوى
-            Positioned(
+        child: Scaffold(
 
-              top: 120,
-              left: 0,
-              right: 0,
-              bottom: 0,
+          backgroundColor:
+              Colors.white,
 
-              child: Container(
+          body: SingleChildScrollView(
 
-                padding:
-                    const EdgeInsets.symmetric(
-                  horizontal: 16,
+            child: Column(
+              children: [
+
+                /// 🔵 HEADER
+                Stack(
+                  children: [
+
+                    Container(
+
+                      height: 170,
+                      width:
+                          double.infinity,
+
+                      decoration:
+                          BoxDecoration(
+
+                        color:
+                            const Color(
+                          0xFF4C82B4,
+                        ),
+
+                        borderRadius:
+                            BorderRadius
+                                .vertical(
+
+                          bottom:
+                              Radius
+                                  .elliptical(
+
+                            MediaQuery.of(
+                                    context)
+                                .size
+                                .width,
+
+                            60,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    /// 🧠 APP NAME
+                    const Positioned(
+
+                      top: 100,
+                      left: 0,
+                      right: 0,
+
+                      child: Center(
+
+                        child: Text(
+
+                          "NeuroPulse",
+
+                          style:
+                              TextStyle(
+                            color:
+                                Colors
+                                    .white,
+
+                            fontSize:
+                                24,
+
+                            fontWeight:
+                                FontWeight
+                                    .bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
 
-                decoration:
-                    const BoxDecoration(
+                const SizedBox(
+                  height: 35,
+                ),
 
-                  color: Color(0xFFF5F5F5),
+                /// 📝 TITLE
+                Text(
 
-                  borderRadius:
-                      BorderRadius.only(
-                    topLeft:
-                        Radius.circular(40),
-                    topRight:
-                        Radius.circular(40),
+                  t(
+                    'title',
+                    isArabic,
+                  ),
+
+                  style:
+                      const TextStyle(
+                    fontSize: 24,
+                    fontWeight:
+                        FontWeight.bold,
+                    color:
+                        primaryColor,
                   ),
                 ),
 
-                child: SingleChildScrollView(
+                const SizedBox(
+                  height: 30,
+                ),
+
+                Padding(
+
+                  padding:
+                      const EdgeInsets
+                          .symmetric(
+                    horizontal: 20,
+                  ),
 
                   child: Column(
                     children: [
 
-                      const SizedBox(height: 60),
-
-                      /// 📝 Title
-                      Text(
-                        t('title', isArabic),
-
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight:
-                              FontWeight.bold,
-                          color: primaryColor,
+                      /// 👤 NAME
+                      _buildTextField(
+                        t(
+                          'name',
+                          isArabic,
                         ),
                       ),
 
-                      const SizedBox(height: 30),
-
-                      /// 👤 Name
+                      /// 📧 EMAIL
                       _buildTextField(
-                        t('name', isArabic),
-                      ),
-
-                      /// 📧 Email
-                      _buildTextField(
-                        t('email', isArabic),
-                      ),
-
-                      /// 🔒 Password
-                      _buildTextField(
-                        t('password', isArabic),
-                        isPassword: true,
-                      ),
-
-                      /// 🔒 Confirm Password
-                      _buildTextField(
-                        t('confirm', isArabic),
-                        isConfirm: true,
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      /// 🩺 اختيار النوع
-                      Text(
-                        t('step1', isArabic),
-
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
+                        t(
+                          'email',
+                          isArabic,
                         ),
                       ),
 
-                      const SizedBox(height: 5),
+                      /// 🔒 PASSWORD
+                      _buildTextField(
 
+                        t(
+                          'password',
+                          isArabic,
+                        ),
+
+                        isPassword:
+                            true,
+                      ),
+
+                      /// 🔒 CONFIRM
+                      _buildTextField(
+
+                        t(
+                          'confirm',
+                          isArabic,
+                        ),
+
+                        isConfirm:
+                            true,
+                      ),
+
+                      const SizedBox(
+                        height: 15,
+                      ),
+
+                      /// 🩺 ROLE TEXT
+                      Text(
+
+                        t(
+                          'step1',
+                          isArabic,
+                        ),
+
+                        style:
+                            const TextStyle(
+                          fontSize: 13,
+                          color:
+                              Colors.grey,
+                        ),
+                      ),
+
+                      const SizedBox(
+                        height: 8,
+                      ),
+
+                      /// 🩺 DROPDOWN
                       _buildRoleDropdown(
                         isArabic,
                         primaryColor,
                       ),
 
-                      const SizedBox(height: 25),
+                      const SizedBox(
+                        height: 30,
+                      ),
 
-                      /// 🔥 زر Next
+                      /// 🔥 NEXT BUTTON
                       SizedBox(
 
-                        width: double.infinity,
+                        width:
+                            double.infinity,
 
-                        child: ElevatedButton(
+                        child:
+                            ElevatedButton(
 
                           style:
-                              ElevatedButton.styleFrom(
+                              ElevatedButton
+                                  .styleFrom(
 
                             backgroundColor:
                                 primaryColor,
 
                             shape:
                                 RoundedRectangleBorder(
+
                               borderRadius:
-                                  BorderRadius.circular(
+                                  BorderRadius
+                                      .circular(
                                 12,
                               ),
                             ),
 
                             padding:
-                                const EdgeInsets.symmetric(
-                              vertical: 14,
+                                const EdgeInsets
+                                    .symmetric(
+                              vertical:
+                                  14,
                             ),
                           ),
 
-                          onPressed: () {
+                          onPressed:
+                              () {
 
                             if (selectedRole ==
                                 "doctor") {
 
-                              Navigator.push(
+                              Navigator
+                                  .push(
+
                                 context,
 
                                 MaterialPageRoute(
                                   builder:
-                                      (context) =>
+                                      (
+                                        context,
+                                      ) =>
                                           const DoctorInfoScreen(),
                                 ),
                               );
@@ -220,12 +347,16 @@ class _SignupScreenState extends State<SignupScreen> {
                             } else if (selectedRole ==
                                 "patient") {
 
-                              Navigator.push(
+                              Navigator
+                                  .push(
+
                                 context,
 
                                 MaterialPageRoute(
                                   builder:
-                                      (context) =>
+                                      (
+                                        context,
+                                      ) =>
                                           const ProfileInfoScreen(),
                                 ),
                               );
@@ -233,11 +364,13 @@ class _SignupScreenState extends State<SignupScreen> {
                             } else {
 
                               ScaffoldMessenger.of(
-                                context,
-                              ).showSnackBar(
+                                      context)
+                                  .showSnackBar(
 
                                 SnackBar(
-                                  content: Text(
+
+                                  content:
+                                      Text(
 
                                     isArabic
                                         ? "من فضلك اختر (طبيب أو مريض) أولاً"
@@ -249,65 +382,42 @@ class _SignupScreenState extends State<SignupScreen> {
                           },
 
                           child: Text(
-                            t('next', isArabic),
 
-                            style: const TextStyle(
-                              color: Colors.white,
+                            t(
+                              'next',
+                              isArabic,
+                            ),
+
+                            style:
+                                const TextStyle(
+                              color:
+                                  Colors
+                                      .white,
                             ),
                           ),
                         ),
                       ),
 
-                      const SizedBox(height: 25),
+                      const SizedBox(
+                        height: 30,
+                      ),
                     ],
                   ),
                 ),
-              ),
+              ],
             ),
-
-            /// 🔵 Header
-            Container(
-
-              height: 160,
-              width: double.infinity,
-
-              decoration: const BoxDecoration(
-
-                color: Color(0xFF4C82B4),
-
-                borderRadius:
-                    BorderRadius.only(
-                  bottomLeft:
-                      Radius.circular(80),
-
-                  bottomRight:
-                      Radius.circular(80),
-                ),
-              ),
-
-              child: const Center(
-                child: Text(
-                  "NeuroPulse",
-
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight:
-                        FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  /// 🩺 Dropdown اختيار النوع
+  /// 🩺 DROPDOWN
   Widget _buildRoleDropdown(
+
     bool isArabic,
     Color primaryColor,
+
   ) {
 
     return Container(
@@ -318,13 +428,17 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
 
       decoration: BoxDecoration(
+
         color: Colors.white,
 
         borderRadius:
-            BorderRadius.circular(12),
+            BorderRadius.circular(
+          12,
+        ),
       ),
 
-      child: DropdownButtonHideUnderline(
+      child:
+          DropdownButtonHideUnderline(
 
         child: DropdownButton<String>(
 
@@ -334,9 +448,13 @@ class _SignupScreenState extends State<SignupScreen> {
 
           hint: Text(
 
-            t('role', isArabic),
+            t(
+              'role',
+              isArabic,
+            ),
 
-            style: const TextStyle(
+            style:
+                const TextStyle(
               fontSize: 14,
               color: Colors.grey,
             ),
@@ -345,16 +463,26 @@ class _SignupScreenState extends State<SignupScreen> {
           items: [
 
             DropdownMenuItem(
+
               value: "doctor",
+
               child: Text(
-                t('doctor', isArabic),
+                t(
+                  'doctor',
+                  isArabic,
+                ),
               ),
             ),
 
             DropdownMenuItem(
+
               value: "patient",
+
               child: Text(
-                t('patient', isArabic),
+                t(
+                  'patient',
+                  isArabic,
+                ),
               ),
             ),
           ],
@@ -370,12 +498,14 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  /// 🛠 TextField
+  /// 🛠 TEXT FIELD
   Widget _buildTextField(
+
     String hint, {
 
     bool isPassword = false,
     bool isConfirm = false,
+
   }) {
 
     return Padding(
@@ -388,22 +518,29 @@ class _SignupScreenState extends State<SignupScreen> {
       child: TextField(
 
         obscureText:
-            isPassword || isConfirm,
+            isPassword ||
+                isConfirm,
 
-        decoration: InputDecoration(
+        decoration:
+            InputDecoration(
 
           hintText: hint,
 
           filled: true,
 
-          fillColor: Colors.white,
+          fillColor:
+              Colors.white,
 
-          border: OutlineInputBorder(
+          border:
+              OutlineInputBorder(
 
             borderRadius:
-                BorderRadius.circular(12),
+                BorderRadius.circular(
+              12,
+            ),
 
-            borderSide: BorderSide.none,
+            borderSide:
+                BorderSide.none,
           ),
         ),
       ),

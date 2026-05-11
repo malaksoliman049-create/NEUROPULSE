@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+
 import '../providers/language_provider.dart';
 
 class DoctorInfoScreen extends StatefulWidget {
@@ -24,42 +26,74 @@ class _DoctorInfoScreenState
 
   String? _selectedSpecialization;
 
-  /// 🩺 التخصصات
+  /// 🩺 SPECIALIZATIONS
   final List<String> _specializations = [
+
     'Cardiology',
+
     'Neurology',
+
     'General',
   ];
 
-  /// 🌍 الترجمة
-  final Map<String, Map<String, String>> localized = {
+  /// 🌍 TRANSLATIONS
+  final Map<String, Map<String, String>>
+      localized = {
 
     'en': {
+
       'title': 'Doctor Profile',
-      'specialization': 'Specialization',
-      'experience': 'Years of Experience',
-      'phone': 'Phone Number',
-      'clinic': 'Clinic / Hospital',
+
+      'specialization':
+          'Specialization',
+
+      'experience':
+          'Years of Experience',
+
+      'phone':
+          'Phone Number',
+
+      'clinic':
+          'Clinic / Hospital',
+
       'signup': 'NEXT',
+
       'error_spec':
           'Please select your specialty',
     },
 
     'ar': {
-      'title': 'بيانات الطبيب',
-      'specialization': 'التخصص',
-      'experience': 'سنوات الخبرة',
-      'phone': 'رقم الهاتف',
-      'clinic': 'العيادة / المستشفى',
+
+      'title':
+          'بيانات الطبيب',
+
+      'specialization':
+          'التخصص',
+
+      'experience':
+          'سنوات الخبرة',
+
+      'phone':
+          'رقم الهاتف',
+
+      'clinic':
+          'العيادة / المستشفى',
+
       'signup': 'التالي',
+
       'error_spec':
           'اختر تخصصك الطبي أولاً',
     }
   };
 
-  String t(String key, bool isArabic) =>
-      localized[
-          isArabic ? 'ar' : 'en']![key]!;
+  String t(
+    String key,
+    bool isArabic,
+  ) {
+
+    return localized[
+        isArabic ? 'ar' : 'en']![key]!;
+  }
 
   @override
   void dispose() {
@@ -76,255 +110,400 @@ class _DoctorInfoScreenState
   @override
   Widget build(BuildContext context) {
 
-    final langProvider =
-        Provider.of<LanguageProvider>(context);
-
     final isArabic =
-        langProvider.isArabic;
+        Provider.of<LanguageProvider>(
+          context,
+        ).isArabic;
 
-    final primaryColor =
-        const Color(0xFF3B67A1);
+    const primaryColor =
+        Color(0xFF4C82B4);
 
-    return Directionality(
+    return AnnotatedRegion<
+        SystemUiOverlayStyle>(
 
-      textDirection:
-          isArabic
-              ? TextDirection.rtl
-              : TextDirection.ltr,
+      value:
+          const SystemUiOverlayStyle(
+        statusBarColor:
+            Colors.transparent,
 
-      child: Scaffold(
+        statusBarIconBrightness:
+            Brightness.light,
+      ),
 
-        backgroundColor: Colors.white,
+      child: Directionality(
 
-        body: Column(
-          children: [
+        textDirection:
+            isArabic
+                ? TextDirection.rtl
+                : TextDirection.ltr,
 
-            /// 🔵 Header
-            Container(
+        child: Scaffold(
 
-              height: 160,
-              width: double.infinity,
+          backgroundColor:
+              Colors.white,
 
-              decoration: BoxDecoration(
-                color: primaryColor,
+          body: Column(
+            children: [
 
-                borderRadius:
-                    const BorderRadius.vertical(
-                  bottom:
-                      Radius.elliptical(250, 50),
-                ),
+              /// 🔵 HEADER
+              Stack(
+                children: [
+
+                  Container(
+
+                    height: 170,
+                    width:
+                        double.infinity,
+
+                    decoration:
+                        BoxDecoration(
+
+                   
+                        color:
+                            const Color(
+                          0xFF4C82B4,
+                        ),
+
+                      borderRadius:
+                          BorderRadius
+                              .vertical(
+
+                        bottom:
+                            Radius
+                                .elliptical(
+
+                          MediaQuery.of(
+                                  context)
+                              .size
+                              .width,
+
+                          60,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  /// 🧠 APP NAME
+                  const Positioned(
+
+                    top: 100,
+                    left: 0,
+                    right: 0,
+
+                    child: Center(
+
+                      child: Text(
+
+                        "NeuroPulse",
+
+                        style:
+                            TextStyle(
+                          color:
+                              Colors
+                                  .white,
+
+                          fontSize:
+                              24,
+
+                          fontWeight:
+                              FontWeight
+                                  .bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
 
-              child: const Center(
-                child: Text(
-                  "NeuroPulse",
+              Expanded(
 
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Serif',
+                child:
+                    SingleChildScrollView(
+
+                  padding:
+                      const EdgeInsets
+                          .symmetric(
+                    horizontal: 25,
+                  ),
+
+                  child: Column(
+                    children: [
+
+                      const SizedBox(
+                        height: 30,
+                      ),
+
+                      /// 📝 TITLE
+                      Text(
+
+                        t(
+                          'title',
+                          isArabic,
+                        ),
+
+                        style:
+                            const TextStyle(
+                          color:
+                              primaryColor,
+
+                          fontSize:
+                              26,
+
+                          fontWeight:
+                              FontWeight
+                                  .bold,
+                        ),
+                      ),
+
+                      const SizedBox(
+                        height: 40,
+                      ),
+
+                      /// 🔽 SPECIALIZATION
+                      _buildSpecializationDropdown(
+                        isArabic,
+                        primaryColor,
+                      ),
+
+                      const SizedBox(
+                        height: 20,
+                      ),
+
+                      /// ⌨️ EXPERIENCE
+                      _buildTextField(
+
+                        t(
+                          'experience',
+                          isArabic,
+                        ),
+
+                        _experienceController,
+
+                        keyboardType:
+                            TextInputType
+                                .number,
+                      ),
+
+                      const SizedBox(
+                        height: 20,
+                      ),
+
+                      /// ⌨️ PHONE
+                      _buildTextField(
+
+                        t(
+                          'phone',
+                          isArabic,
+                        ),
+
+                        _phoneController,
+
+                        keyboardType:
+                            TextInputType
+                                .phone,
+                      ),
+
+                      const SizedBox(
+                        height: 20,
+                      ),
+
+                      /// ⌨️ CLINIC
+                      _buildTextField(
+
+                        t(
+                          'clinic',
+                          isArabic,
+                        ),
+
+                        _clinicController,
+                      ),
+
+                      const SizedBox(
+                        height: 50,
+                      ),
+
+                      /// 🔥 NEXT BUTTON
+                      SizedBox(
+
+                        width:
+                            double.infinity,
+
+                        height: 55,
+
+                        child:
+                            ElevatedButton(
+
+                          onPressed: () {
+
+                            if (_selectedSpecialization ==
+                                null) {
+
+                              ScaffoldMessenger.of(
+                                      context)
+                                  .showSnackBar(
+
+                                SnackBar(
+
+                                  content:
+                                      Text(
+
+                                    t(
+                                      'error_spec',
+                                      isArabic,
+                                    ),
+                                  ),
+                                ),
+                              );
+
+                              return;
+                            }
+
+                            Navigator
+                                .pushNamed(
+
+                              context,
+
+                              '/doctors_appointments',
+                            );
+                          },
+
+                          style:
+                              ElevatedButton
+                                  .styleFrom(
+
+                            backgroundColor:
+                                primaryColor,
+
+                            shape:
+                                RoundedRectangleBorder(
+
+                              borderRadius:
+                                  BorderRadius
+                                      .circular(
+                                12,
+                              ),
+                            ),
+
+                            elevation: 4,
+                          ),
+
+                          child: Text(
+
+                            t(
+                              'signup',
+                              isArabic,
+                            ),
+
+                            style:
+                                const TextStyle(
+                              color:
+                                  Colors
+                                      .white,
+
+                              fontSize:
+                                  20,
+
+                              fontWeight:
+                                  FontWeight
+                                      .bold,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(
+                        height: 30,
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ),
-
-            Expanded(
-              child: SingleChildScrollView(
-
-                padding:
-                    const EdgeInsets.symmetric(
-                  horizontal: 25,
-                ),
-
-                child: Column(
-                  children: [
-
-                    const SizedBox(height: 20),
-
-                    /// 📝 Title
-                    Text(
-                      t('title', isArabic),
-
-                      style: TextStyle(
-                        color: primaryColor,
-                        fontSize: 26,
-                        fontWeight:
-                            FontWeight.bold,
-                        fontFamily: 'Serif',
-                      ),
-                    ),
-
-                    const SizedBox(height: 40),
-
-                    /// 🔽 التخصص
-                    _buildSpecializationDropdown(
-                      isArabic,
-                      primaryColor,
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    /// ⌨️ الخبرة
-                    _buildTextField(
-                      t('experience', isArabic),
-                      _experienceController,
-                      keyboardType:
-                          TextInputType.number,
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    /// ⌨️ الهاتف
-                    _buildTextField(
-                      t('phone', isArabic),
-                      _phoneController,
-                      keyboardType:
-                          TextInputType.phone,
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    /// ⌨️ العيادة / المستشفى
-                    _buildTextField(
-                      t('clinic', isArabic),
-                      _clinicController,
-                    ),
-
-                    const SizedBox(height: 50),
-
-                    /// 🔥 زر NEXT
-                    SizedBox(
-
-                      width: double.infinity,
-                      height: 55,
-
-                      child: ElevatedButton(
-
-                        onPressed: () {
-
-                          if (_selectedSpecialization ==
-                              null) {
-
-                            ScaffoldMessenger.of(
-                              context,
-                            ).showSnackBar(
-
-                              SnackBar(
-                                content: Text(
-                                  t(
-                                    'error_spec',
-                                    isArabic,
-                                  ),
-                                ),
-                              ),
-                            );
-
-                            return;
-                          }
-
-                          Navigator.pushNamed(
-                            context,
-                            '/doctors_appointments',
-                          );
-                        },
-
-                        style:
-                            ElevatedButton.styleFrom(
-
-                          backgroundColor:
-                              primaryColor,
-
-                          shape:
-                              RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(
-                              12,
-                            ),
-                          ),
-
-                          elevation: 4,
-                        ),
-
-                        child: Text(
-                          t('signup', isArabic),
-
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight:
-                                FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 30),
-                  ],
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  /// 🛠 Dropdown
+  /// 🛠 DROPDOWN
   Widget _buildSpecializationDropdown(
+
     bool isArabic,
     Color primaryColor,
+
   ) {
 
     return Column(
+
       crossAxisAlignment:
           CrossAxisAlignment.start,
 
       children: [
 
         Text(
-          t('specialization', isArabic),
 
-          style: const TextStyle(
+          t(
+            'specialization',
+            isArabic,
+          ),
+
+          style:
+              const TextStyle(
             color: Colors.grey,
             fontSize: 14,
-            fontWeight: FontWeight.bold,
+            fontWeight:
+                FontWeight.bold,
           ),
         ),
 
-        const SizedBox(height: 8),
+        const SizedBox(
+          height: 8,
+        ),
 
         Container(
 
           padding:
-              const EdgeInsets.symmetric(
+              const EdgeInsets
+                  .symmetric(
             horizontal: 15,
           ),
 
-          decoration: BoxDecoration(
+          decoration:
+              BoxDecoration(
 
             color: Colors.white,
 
             borderRadius:
-                BorderRadius.circular(12),
+                BorderRadius.circular(
+              12,
+            ),
 
             boxShadow: [
+
               BoxShadow(
-                color: Colors.black.withValues(
+
+                color:
+                    Colors.black
+                        .withValues(
                   alpha: 0.05,
                 ),
 
                 blurRadius: 5,
 
                 offset:
-                    const Offset(0, 2),
+                    const Offset(
+                  0,
+                  2,
+                ),
               ),
             ],
           ),
 
-          child: DropdownButtonHideUnderline(
+          child:
+              DropdownButtonHideUnderline(
 
-            child: DropdownButton<String>(
+            child:
+                DropdownButton<String>(
 
               value:
                   _selectedSpecialization,
@@ -332,32 +511,44 @@ class _DoctorInfoScreenState
               isExpanded: true,
 
               hint: Text(
+
                 isArabic
                     ? "اختر التخصص"
                     : "Select",
               ),
 
               icon: Icon(
+
                 Icons.arrow_drop_down,
-                color: primaryColor,
+
+                color:
+                    primaryColor,
               ),
 
               items:
                   _specializations.map<
                       DropdownMenuItem<String>>(
-                (String value) {
+                (
+                  String value,
+                ) {
 
                   return DropdownMenuItem<
                       String>(
+
                     value: value,
-                    child: Text(value),
+
+                    child: Text(
+                      value,
+                    ),
                   );
                 },
               ).toList(),
 
-              onChanged: (newValue) {
+              onChanged:
+                  (newValue) {
 
                 setState(() {
+
                   _selectedSpecialization =
                       newValue;
                 });
@@ -369,65 +560,87 @@ class _DoctorInfoScreenState
     );
   }
 
-  /// 🛠 TextField
+  /// 🛠 TEXT FIELD
   Widget _buildTextField(
+
     String label,
     TextEditingController controller, {
+
     TextInputType keyboardType =
         TextInputType.text,
+
   }) {
 
     return Column(
+
       crossAxisAlignment:
           CrossAxisAlignment.start,
 
       children: [
 
         Text(
+
           label,
 
-          style: const TextStyle(
+          style:
+              const TextStyle(
             color: Colors.grey,
             fontSize: 14,
-            fontWeight: FontWeight.bold,
+            fontWeight:
+                FontWeight.bold,
           ),
         ),
 
-        const SizedBox(height: 8),
+        const SizedBox(
+          height: 8,
+        ),
 
         Container(
 
-          decoration: BoxDecoration(
+          decoration:
+              BoxDecoration(
 
             color: Colors.white,
 
             borderRadius:
-                BorderRadius.circular(12),
+                BorderRadius.circular(
+              12,
+            ),
 
             boxShadow: [
+
               BoxShadow(
-                color: Colors.black.withValues(
+
+                color:
+                    Colors.black
+                        .withValues(
                   alpha: 0.05,
                 ),
 
                 blurRadius: 5,
 
                 offset:
-                    const Offset(0, 2),
+                    const Offset(
+                  0,
+                  2,
+                ),
               ),
             ],
           ),
 
           child: TextField(
 
-            controller: controller,
+            controller:
+                controller,
 
-            keyboardType: keyboardType,
+            keyboardType:
+                keyboardType,
 
             decoration:
                 const InputDecoration(
 
-              border: InputBorder.none,
+              border:
+                  InputBorder.none,
 
               contentPadding:
                   EdgeInsets.symmetric(

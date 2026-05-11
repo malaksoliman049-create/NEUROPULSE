@@ -1,121 +1,338 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/language_provider.dart';
-import '../screens/header_clipper.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+
+  const ProfileScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final isArabic = Provider.of<LanguageProvider>(context).isArabic;
-    final primaryColor = const Color(0xFF4C82B4);
 
-    final String healthInfoTitle = isArabic ? "المعلومات الصحية" : "Health info";
-    final String editBtn = isArabic ? "تعديل" : "Edit";
+    final isArabic =
+        Provider.of<LanguageProvider>(
+          context,
+        ).isArabic;
 
-    return Directionality(
-      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea( // تم إضافة SafeArea لضمان اتساق مكان زر الرجوع
-          child: Column(
+    String t(String en, String ar) =>
+        isArabic ? ar : en;
+
+    const Color primaryColor =
+        Color(0xFF4C82B4);
+
+    const Color iconColor =
+        Color(0xFF4C82B4);
+
+    return AnnotatedRegion<
+        SystemUiOverlayStyle>(
+
+      value:
+          const SystemUiOverlayStyle(
+
+        statusBarColor:
+            Colors.transparent,
+
+        statusBarIconBrightness:
+            Brightness.light,
+      ),
+
+      child: Directionality(
+
+        textDirection:
+            isArabic
+                ? TextDirection.rtl
+                : TextDirection.ltr,
+
+        child: Scaffold(
+
+          backgroundColor:
+              Colors.white,
+
+          body: Column(
             children: [
-              /// 🔵 Header Section
+
+              /// 🔵 HEADER
               Stack(
                 children: [
-                  ClipPath(
-                    clipper: HeaderClipper(),
-                    child: Container(
-                      height: 240,
-                      width: double.infinity,
-                      color: primaryColor,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 20),
-                          Container(
-                            padding: const EdgeInsets.all(3),
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                            child: CircleAvatar(
-                              radius: 40,
-                              backgroundColor: Colors.grey[300],
-                              backgroundImage: const AssetImage("assets/images/man.png"),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            "Ethan Williams",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          SizedBox(
-                            height: 35,
-                            child: ElevatedButton.icon(
-                              onPressed: () {},
-                              icon: const Icon(Icons.edit, size: 16),
-                              label: Text(editBtn, style: const TextStyle(fontSize: 14)),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF3B67A1),
-                                foregroundColor: Colors.white,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+
+                  Container(
+
+                    height: 170,
+                    width:
+                        double.infinity,
+
+                    decoration:
+                        BoxDecoration(
+
+                      color:
+                          primaryColor,
+
+                      borderRadius:
+                          BorderRadius
+                              .vertical(
+
+                        bottom:
+                            Radius
+                                .elliptical(
+
+                          MediaQuery.of(
+                                  context)
+                              .size
+                              .width,
+
+                          60,
+                        ),
                       ),
                     ),
                   ),
 
-                  /// 🔙 Back Button (تم تعديله ليطابق الكود الموحد)
+                  /// 🔙 BACK BUTTON
                   Positioned(
-                    top: 20,
-                    left: isArabic ? null : 10,
-                    right: isArabic ? 10 : null,
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
-                      onPressed: () => Navigator.pop(context),
+
+                    top: 80,
+
+                    left:
+                        isArabic
+                            ? null
+                            : 10,
+
+                    right:
+                        isArabic
+                            ? 10
+                            : null,
+
+                    child:
+                        IconButton(
+
+                      onPressed:
+                          () =>
+                              Navigator.pop(
+                        context,
+                      ),
+
+                      icon:
+                          const Icon(
+
+                        Icons
+                            .arrow_back_ios_new,
+
+                        color:
+                            Colors.white,
+
+                        size: 22,
+                      ),
+                    ),
+                  ),
+
+                  /// 🩺 TITLE
+                  Positioned(
+
+                    top: 90,
+                    left: 0,
+                    right: 0,
+
+                    child: Center(
+
+                      child: Text(
+
+                        t(
+                          "Profile",
+                          "الملف الشخصي",
+                        ),
+
+                        style:
+                            const TextStyle(
+
+                          color:
+                              Colors.white,
+
+                          fontSize:
+                              22,
+
+                          fontWeight:
+                              FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
 
-              const SizedBox(height: 10),
+              /// 👤 IMAGE + INFO
+              Padding(
 
-              /// 🧠 Title
-              Text(
-                healthInfoTitle,
-                style: TextStyle(
-                  color: primaryColor,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Serif',
+                padding:
+                    const EdgeInsets.only(
+
+                  top: 35,
+                  left: 18,
+                  right: 18,
+                ),
+
+                child: Row(
+
+                  crossAxisAlignment:
+                      CrossAxisAlignment
+                          .center,
+
+                  children: [
+
+                    CircleAvatar(
+
+                      radius: 35,
+
+                      backgroundColor:
+                          Colors.blue
+                              .shade100,
+
+                      backgroundImage:
+                          const AssetImage(
+
+                        "assets/images/man.png",
+                      ),
+                    ),
+
+                    const SizedBox(
+                      width: 25,
+                    ),
+
+                    const Text(
+
+                      "Ethan Williams",
+
+                      style:
+                          TextStyle(
+
+                        fontSize:
+                            18,
+
+                        fontWeight:
+                            FontWeight.bold,
+
+                        color:
+                            primaryColor,
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
-              /// 📋 Health Info List
+              const SizedBox(
+                height: 35,
+              ),
+
+              /// 📄 INFO
               Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                  children: [
-                    _buildHealthCard(isArabic ? "العمر : 47" : "Age : 47", "assets/images/age.png"),
-                    _buildHealthCard(isArabic ? "التدخين : لا" : "Smoking : No", "assets/images/smoking.svg"),
-                    _buildHealthCard(isArabic ? "الطول : 165 سم" : "Height : 165 cm", "assets/images/height.png"),
-                    _buildHealthCard(isArabic ? "الوزن : 65 كجم" : "Weight : 65 KG", "assets/images/weight.svg"),
-                    _buildHealthCard(isArabic ? "أمراض القلب : 60" : "Heart disease : 60", "assets/images/Disease.png"),
-                  ],
+
+                child: Container(
+
+                  width:
+                      double.infinity,
+
+                  padding:
+                      const EdgeInsets
+                          .symmetric(
+                    horizontal: 22,
+                  ),
+
+                  child: ListView(
+
+                    children: [
+
+                      _buildInfoRow(
+
+                        icon:
+                            Icons.cake,
+
+                        title: t(
+                          "Age",
+                          "العمر",
+                        ),
+
+                        value: "47",
+
+                        iconColor:
+                            iconColor,
+                      ),
+
+                      _buildInfoRow(
+
+                        icon:
+                            Icons.smoking_rooms,
+
+                        title: t(
+                          "Smoking",
+                          "التدخين",
+                        ),
+
+                        value: t(
+                          "No",
+                          "لا",
+                        ),
+
+                        iconColor:
+                            iconColor,
+                      ),
+
+                      _buildInfoRow(
+
+                        icon:
+                            Icons.height,
+
+                        title: t(
+                          "Height",
+                          "الطول",
+                        ),
+
+                        value: t(
+                          "165 cm",
+                          "165 سم",
+                        ),
+
+                        iconColor:
+                            iconColor,
+                      ),
+
+                      _buildInfoRow(
+
+                        icon:
+                            Icons.monitor_weight,
+
+                        title: t(
+                          "Weight",
+                          "الوزن",
+                        ),
+
+                        value: t(
+                          "65 KG",
+                          "65 كجم",
+                        ),
+
+                        iconColor:
+                            iconColor,
+                      ),
+
+                      _buildInfoRow(
+
+                        icon:
+                            Icons.favorite,
+
+                        title: t(
+                          "Heart disease",
+                          "أمراض القلب",
+                        ),
+
+                        value: "60",
+
+                        iconColor:
+                            iconColor,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -125,38 +342,72 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  /// 📦 Health Card Widget
-  Widget _buildHealthCard(String text, String iconPath) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 15),
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE3F2FD).withValues(alpha: 0.6),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
+  Widget _buildInfoRow({
+
+    required IconData icon,
+    required String title,
+    required String value,
+    required Color iconColor,
+
+  }) {
+
+    return Padding(
+
+      padding:
+          const EdgeInsets.only(
+        bottom: 28,
       ),
+
       child: Row(
         children: [
-          SizedBox(
-            width: 35,
-            height: 35,
-            child: iconPath.endsWith('.svg')
-                ? SvgPicture.asset(iconPath)
-                : Image.asset(iconPath, fit: BoxFit.contain),
+
+          Icon(
+
+            icon,
+
+            color:
+                iconColor,
+
+            size: 24,
           ),
-          const SizedBox(width: 20),
+
+          const SizedBox(
+            width: 12,
+          ),
+
+          Expanded(
+
+            child: Text(
+
+              title,
+
+              style:
+                  const TextStyle(
+
+                fontWeight:
+                    FontWeight.bold,
+
+                color:
+                    Color(0xFF5A6B7B),
+
+                fontSize: 15,
+              ),
+            ),
+          ),
+
           Text(
-            text,
+
+            value,
+
             style: const TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF3B67A1),
+
+              color:
+                  Colors.grey,
+
+              fontSize: 13,
+
+              fontWeight:
+                  FontWeight.w500,
             ),
           ),
         ],

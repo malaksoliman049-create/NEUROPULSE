@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/language_provider.dart';
@@ -15,34 +16,39 @@ class PatientListScreen extends StatefulWidget {
 class _PatientListScreenState
     extends State<PatientListScreen> {
 
-  final List<Map<String, String>> patientsData = [
+  final List<Map<String, String>>
+      patientsData = [
 
     {
       "name": "Ali Ahmed",
       "age": "57 y",
       "risk": "High Risk",
-      "image": "assets/images/patient1.png",
+      "image":
+          "assets/images/patient1.png",
     },
 
     {
       "name": "Mohamed Ahmed",
       "age": "60 y",
       "risk": "Medium Risk",
-      "image": "assets/images/patient2.png",
+      "image":
+          "assets/images/patient2.png",
     },
 
     {
       "name": "Sara Ahmed",
       "age": "40 y",
       "risk": "High Risk",
-      "image": "assets/images/patient3.png",
+      "image":
+          "assets/images/patient3.png",
     },
 
     {
       "name": "Naira Ahmed",
       "age": "55y",
       "risk": "Low Risk",
-      "image": "assets/images/patient4.png",
+      "image":
+          "assets/images/patient4.png",
     },
   ];
 
@@ -50,303 +56,353 @@ class _PatientListScreenState
   Widget build(BuildContext context) {
 
     final isArabic =
-        Provider.of<LanguageProvider>(context)
-            .isArabic;
+        Provider.of<LanguageProvider>(
+          context,
+        ).isArabic;
 
     String t(String en, String ar) =>
         isArabic ? ar : en;
 
     final primaryColor =
-        const Color(0xFF4C82B4);
+        const Color(0xFF3B67A1);
 
-    return Directionality(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
 
-      textDirection:
-          isArabic
-              ? TextDirection.rtl
-              : TextDirection.ltr,
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness:
+            Brightness.light,
+      ),
 
-      child: Scaffold(
+      child: Directionality(
 
-        backgroundColor: Colors.white,
+        textDirection:
+            isArabic
+                ? TextDirection.rtl
+                : TextDirection.ltr,
 
-        body: Column(
-          children: [
+        child: Scaffold(
 
-            /// 🔵 HEADER
-            Stack(
-              children: [
+          backgroundColor: Colors.white,
 
-                Container(
+          body: Column(
+            children: [
 
-                  height: 160,
+              /// 🔵 HEADER
+              Stack(
+                children: [
 
-                  decoration:
-                      const BoxDecoration(
+                  Container(
 
-                    color: Color(0xFF4C82B4),
+                    height: 170,
 
-                    borderRadius:
-                        BorderRadius.vertical(
-                      bottom:
-                          Radius.elliptical(
-                        250,
-                        50,
+                    decoration:
+                        BoxDecoration(
+
+                      color:
+                          const Color(
+                        0xFF4C82B4,
+                      ),
+
+                      borderRadius:
+                          BorderRadius.vertical(
+                        bottom:
+                            Radius.elliptical(
+                          MediaQuery.of(
+                                  context)
+                              .size
+                              .width,
+                          60,
+                        ),
                       ),
                     ),
                   ),
-                ),
 
-                Positioned(
+                  /// 🔙 BACK BUTTON
+                  Positioned(
 
-                  top: 50,
+                    top: 80,
 
-                  left:
-                      isArabic ? null : 10,
+                    left:
+                        isArabic
+                            ? null
+                            : 10,
 
-                  right:
-                      isArabic ? 10 : null,
+                    right:
+                        isArabic
+                            ? 10
+                            : null,
 
-                  child: IconButton(
+                    child: IconButton(
 
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                      onPressed: () {
+                        Navigator.pop(
+                            context);
+                      },
 
-                    icon: const Icon(
-                      Icons.arrow_back_ios,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-
-                const Positioned(
-
-                  top: 65,
-                  left: 0,
-                  right: 0,
-
-                  child: Center(
-                    child: Text(
-                      "Patients",
-
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight:
-                            FontWeight.bold,
+                      icon: const Icon(
+                        Icons
+                            .arrow_back_ios_new,
+                        color:
+                            Colors.white,
+                        size: 22,
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
 
-            /// 🔍 Search
-            Padding(
+                  /// 🩺 TITLE
+                  const Positioned(
 
-              padding:
-                  const EdgeInsets.symmetric(
-                horizontal: 15,
-                vertical: 18,
-              ),
+                    top: 90,
+                    left: 0,
+                    right: 0,
 
-              child: TextField(
+                    child: Center(
+                      child: Text(
+                        "Patients",
 
-                decoration: InputDecoration(
-
-                  hintText: t(
-                    "Search patient...",
-                    "ابحث عن مريض...",
-                  ),
-
-                  prefixIcon:
-                      const Icon(Icons.search),
-
-                  filled: true,
-
-                  fillColor:
-                      Colors.grey.shade100,
-
-                  border: OutlineInputBorder(
-
-                    borderRadius:
-                        BorderRadius.circular(
-                      15,
+                        style: TextStyle(
+                          color:
+                              Colors.white,
+                          fontSize: 22,
+                          fontWeight:
+                              FontWeight
+                                  .bold,
+                        ),
+                      ),
                     ),
-
-                    borderSide:
-                        BorderSide.none,
                   ),
-                ),
+                ],
               ),
-            ),
 
-            /// 👨‍⚕️ Patients List
-            Expanded(
-
-              child: ListView.builder(
+              /// 🔍 SEARCH
+              Padding(
 
                 padding:
                     const EdgeInsets.symmetric(
-                  horizontal: 12,
+                  horizontal: 15,
+                  vertical: 18,
                 ),
 
-                itemCount:
-                    patientsData.length,
+                child: TextField(
 
-                itemBuilder:
-                    (context, index) {
+                  decoration:
+                      InputDecoration(
 
-                  final patient =
-                      patientsData[index];
-
-                  return InkWell(
-
-                    onTap: () {
-
-                      Navigator.push(
-
-                        context,
-
-                        MaterialPageRoute(
-                          builder:
-                              (context) =>
-                                  const PatientDetails(),
-                        ),
-                      );
-                    },
-
-                    child: Container(
-
-                      margin:
-                          const EdgeInsets.only(
-                        bottom: 18,
-                      ),
-
-                      padding:
-                          const EdgeInsets.all(
-                        12,
-                      ),
-
-                      decoration:
-                          BoxDecoration(
-
-                        color:
-                            Colors.grey.shade200,
-
-                        borderRadius:
-                            BorderRadius.circular(
-                          16,
-                        ),
-                      ),
-
-                      child: Row(
-                        children: [
-
-                          /// 🖼 صورة المريض
-                          CircleAvatar(
-
-                            radius: 28,
-
-                            backgroundColor:
-                                Colors.white,
-
-                            backgroundImage:
-                                AssetImage(
-                              patient['image']!,
-                            ),
-                          ),
-
-                          const SizedBox(width: 15),
-
-                          /// 📄 البيانات
-                          Expanded(
-
-                            child: Column(
-
-                              crossAxisAlignment:
-                                  CrossAxisAlignment
-                                      .start,
-
-                              children: [
-
-                                Text(
-                                  patient['name']!,
-
-                                  style:
-                                      TextStyle(
-                                    color:
-                                        primaryColor,
-
-                                    fontWeight:
-                                        FontWeight
-                                            .bold,
-
-                                    fontSize: 18,
-                                  ),
-                                ),
-
-                                const SizedBox(
-                                  height: 6,
-                                ),
-
-                                Row(
-                                  children: [
-
-                                    Text(
-                                      patient['age']!,
-
-                                      style:
-                                          const TextStyle(
-                                        fontSize:
-                                            16,
-                                        fontWeight:
-                                            FontWeight
-                                                .bold,
-                                      ),
-                                    ),
-
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
-
-                                    Text(
-                                      patient[
-                                          'risk']!,
-
-                                      style:
-                                          TextStyle(
-                                        fontSize:
-                                            16,
-
-                                        color:
-                                            patient['risk'] ==
-                                                    "High Risk"
-                                                ? Colors.red
-                                                : patient['risk'] ==
-                                                        "Medium Risk"
-                                                    ? primaryColor
-                                                    : Colors.green,
-
-                                        fontWeight:
-                                            FontWeight
-                                                .bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                    hintText: t(
+                      "Search patient...",
+                      "ابحث عن مريض...",
                     ),
-                  );
-                },
+
+                    prefixIcon:
+                        const Icon(
+                      Icons.search,
+                    ),
+
+                    filled: true,
+
+                    fillColor:
+                        Colors.grey
+                            .shade100,
+
+                    border:
+                        OutlineInputBorder(
+
+                      borderRadius:
+                          BorderRadius
+                              .circular(
+                        15,
+                      ),
+
+                      borderSide:
+                          BorderSide
+                              .none,
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ],
+
+              /// 👨‍⚕️ PATIENTS LIST
+              Expanded(
+
+                child: ListView.builder(
+
+                  padding:
+                      const EdgeInsets
+                          .symmetric(
+                    horizontal: 12,
+                  ),
+
+                  itemCount:
+                      patientsData.length,
+
+                  itemBuilder:
+                      (context, index) {
+
+                    final patient =
+                        patientsData[
+                            index];
+
+                    return InkWell(
+
+                      onTap: () {
+
+                        Navigator.push(
+
+                          context,
+
+                          MaterialPageRoute(
+                            builder:
+                                (context) =>
+                                    const PatientDetails(),
+                          ),
+                        );
+                      },
+
+                      child: Container(
+
+                        margin:
+                            const EdgeInsets
+                                .only(
+                          bottom: 18,
+                        ),
+
+                        padding:
+                            const EdgeInsets
+                                .all(
+                          12,
+                        ),
+
+                        decoration:
+                            BoxDecoration(
+
+                          color:
+                              Colors.grey
+                                  .shade200,
+
+                          borderRadius:
+                              BorderRadius
+                                  .circular(
+                            16,
+                          ),
+                        ),
+
+                        child: Row(
+                          children: [
+
+                            /// 🖼 PATIENT IMAGE
+                            CircleAvatar(
+
+                              radius: 28,
+
+                              backgroundColor:
+                                  Colors.white,
+
+                              backgroundImage:
+                                  AssetImage(
+                                patient[
+                                    'image']!,
+                              ),
+                            ),
+
+                            const SizedBox(
+                              width: 15,
+                            ),
+
+                            /// 📄 PATIENT INFO
+                            Expanded(
+
+                              child: Column(
+
+                                crossAxisAlignment:
+                                    CrossAxisAlignment
+                                        .start,
+
+                                children: [
+
+                                  Text(
+                                    patient[
+                                        'name']!,
+
+                                    style:
+                                        TextStyle(
+                                      color:
+                                          primaryColor,
+
+                                      fontWeight:
+                                          FontWeight
+                                              .bold,
+
+                                      fontSize:
+                                          18,
+                                    ),
+                                  ),
+
+                                  const SizedBox(
+                                    height: 6,
+                                  ),
+
+                                  Row(
+                                    children: [
+
+                                      Text(
+                                        patient[
+                                            'age']!,
+
+                                        style:
+                                            const TextStyle(
+                                          fontSize:
+                                              16,
+
+                                          fontWeight:
+                                              FontWeight
+                                                  .bold,
+                                        ),
+                                      ),
+
+                                      const SizedBox(
+                                        width:
+                                            20,
+                                      ),
+
+                                      Text(
+                                        patient[
+                                            'risk']!,
+
+                                        style:
+                                            TextStyle(
+
+                                          fontSize:
+                                              16,
+
+                                          color:
+                                              patient['risk'] ==
+                                                      "High Risk"
+                                                  ? Colors.red
+                                                  : patient['risk'] ==
+                                                          "Medium Risk"
+                                                      ? primaryColor
+                                                      : Colors.green,
+
+                                          fontWeight:
+                                              FontWeight
+                                                  .bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

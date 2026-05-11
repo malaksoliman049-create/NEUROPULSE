@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/language_provider.dart';
-import '../screens/header_clipper.dart';
 
 import 'patient_list_screen.dart';
 import 'alerts_screen.dart';
@@ -25,7 +24,10 @@ class _DoctorDashboardScreenState
 
   int currentIndex = 0;
 
-  void _navigateToPage(Widget page, int index) {
+  void _navigateToPage(
+    Widget page,
+    int index,
+  ) {
 
     setState(() {
       currentIndex = index;
@@ -33,7 +35,9 @@ class _DoctorDashboardScreenState
 
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => page),
+      MaterialPageRoute(
+        builder: (_) => page,
+      ),
     ).then((_) {
 
       setState(() {
@@ -47,12 +51,15 @@ class _DoctorDashboardScreenState
   Widget build(BuildContext context) {
 
     final isArabic =
-        Provider.of<LanguageProvider>(context).isArabic;
+        Provider.of<LanguageProvider>(context)
+            .isArabic;
 
     return Directionality(
 
       textDirection:
-          isArabic ? TextDirection.rtl : TextDirection.ltr,
+          isArabic
+              ? TextDirection.rtl
+              : TextDirection.ltr,
 
       child: Scaffold(
 
@@ -62,17 +69,21 @@ class _DoctorDashboardScreenState
           isArabic: isArabic,
         ),
 
-        bottomNavigationBar: BottomNavigationBar(
+        bottomNavigationBar:
+            BottomNavigationBar(
 
           currentIndex: currentIndex,
-          type: BottomNavigationBarType.fixed,
+
+          type:
+              BottomNavigationBarType.fixed,
 
           backgroundColor: Colors.white,
 
           selectedItemColor:
-              const Color(0xFF4C82B4),
+              const Color(0xFF3B67A1),
 
-          unselectedItemColor: Colors.grey,
+          unselectedItemColor:
+              Colors.grey,
 
           selectedFontSize: 10,
           unselectedFontSize: 10,
@@ -83,7 +94,9 @@ class _DoctorDashboardScreenState
 
             if (index == 0) {
 
-              setState(() => currentIndex = 0);
+              setState(() {
+                currentIndex = 0;
+              });
 
             } else if (index == 1) {
 
@@ -119,31 +132,41 @@ class _DoctorDashboardScreenState
 
             _buildItem(
               "assets/images/home.svg",
-              isArabic ? "الرئيسية" : "Home",
+              isArabic
+                  ? "الرئيسية"
+                  : "Home",
               0,
             ),
 
             _buildItem(
               "assets/images/patient.svg",
-              isArabic ? "المرضى" : "Patients",
+              isArabic
+                  ? "المرضى"
+                  : "Patients",
               1,
             ),
 
             _buildItem(
               "assets/images/alert.svg",
-              isArabic ? "تنبيه" : "Alert",
+              isArabic
+                  ? "تنبيه"
+                  : "Alert",
               2,
             ),
 
             _buildItem(
               "assets/images/chat.svg",
-              isArabic ? "المحادثات" : "Chats",
+              isArabic
+                  ? "المحادثات"
+                  : "Chats",
               3,
             ),
 
             _buildItem(
               "assets/images/profile.svg",
-              isArabic ? "الحساب" : "Profile",
+              isArabic
+                  ? "الحساب"
+                  : "Profile",
               4,
             ),
           ],
@@ -169,7 +192,7 @@ class _DoctorDashboardScreenState
         colorFilter: ColorFilter.mode(
 
           currentIndex == index
-              ? const Color(0xFF4C82B4)
+              ? const Color(0xFF3B67A1)
               : Colors.grey,
 
           BlendMode.srcIn,
@@ -183,7 +206,8 @@ class _DoctorDashboardScreenState
 
 // ================= HOME CONTENT =================
 
-class DoctorHomeContent extends StatelessWidget {
+class DoctorHomeContent
+    extends StatelessWidget {
 
   final bool isArabic;
 
@@ -208,101 +232,57 @@ class DoctorHomeContent extends StatelessWidget {
 
             // ================= HEADER =================
 
-            ClipPath(
+            Stack(
+              children: [
 
-              clipper: HeaderClipper(),
+                Container(
 
-              child: Container(
+                  height: 160,
+                  width: double.infinity,
 
-                height: 170,
-                width: double.infinity,
+                  decoration: BoxDecoration(
+                    color:
+                        const Color(
+                      0xFF4C82B4,
+                    ),
 
-                color: const Color(0xFF4C82B4),
-
-                child: Padding(
-
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 18,
-                  ),
-
-                  child: Column(
-
-                    crossAxisAlignment:
-                        CrossAxisAlignment.center,
-
-                    children: [
-
-                      // ================= NOTIFICATION =================
-
-                      Align(
-
-                        alignment: Alignment.topRight,
-
-                        child: Stack(
-
-                          children: [
-
-                            const Icon(
-                              Icons.notifications,
-                              color: Colors.amber,
-                              size: 28,
-                            ),
-
-                            Positioned(
-
-                              right: 0,
-                              top: 0,
-
-                              child: Container(
-
-                                padding:
-                                    const EdgeInsets.all(3),
-
-                                decoration:
-                                    const BoxDecoration(
-                                  color: Colors.red,
-                                  shape: BoxShape.circle,
-                                ),
-
-                                child: const Text(
-
-                                  "1",
-
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 8,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                    borderRadius:
+                        BorderRadius.vertical(
+                      bottom:
+                          Radius.elliptical(
+                        MediaQuery.of(context)
+                            .size
+                            .width,
+                        60,
                       ),
-
-                      const SizedBox(height: 28),
-
-                      Center(
-
-                        child: Text(
-
-                          t(
-                            "Dashboard",
-                            "لوحة التحكم",
-                          ),
-
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight:
-                                FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+
+                Positioned(
+                  top: 80,
+                  left: 0,
+                  right: 0,
+
+                  child: Center(
+                    child: Text(
+
+                      t(
+                        "Dashboard",
+                        "لوحة التحكم",
+                      ),
+
+                      style:
+                          const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight:
+                            FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
 
             // ================= BODY =================
@@ -321,7 +301,9 @@ class DoctorHomeContent extends StatelessWidget {
 
                 children: [
 
-                  const SizedBox(height: 15),
+                  const SizedBox(
+                    height: 15,
+                  ),
 
                   // ================= WELCOME =================
 
@@ -334,24 +316,31 @@ class DoctorHomeContent extends StatelessWidget {
                         "مرحباً دكتور",
                       ),
 
-                      textAlign: TextAlign.center,
+                      textAlign:
+                          TextAlign.center,
 
-                      style: const TextStyle(
+                      style:
+                          const TextStyle(
                         fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF5A6B7B),
+                        fontWeight:
+                            FontWeight.w600,
+                        color:
+                            Color(0xFF5A6B7B),
                       ),
                     ),
                   ),
 
-                  const SizedBox(height: 25),
+                  const SizedBox(
+                    height: 25,
+                  ),
 
                   // ================= STATISTICS =================
 
                   Row(
 
                     mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
+                        MainAxisAlignment
+                            .spaceBetween,
 
                     children: [
 
@@ -364,12 +353,15 @@ class DoctorHomeContent extends StatelessWidget {
                         value: "120",
 
                         color:
-                            const Color(0xFF4C82B4),
+                            const Color(
+                                0xFF3B67A1),
                       ),
 
                       _buildSmallCard(
-                        title:
-                            t("High Risk", "حالات حرجة"),
+                        title: t(
+                          "High Risk",
+                          "حالات حرجة",
+                        ),
 
                         value: "20",
 
@@ -389,13 +381,16 @@ class DoctorHomeContent extends StatelessWidget {
                     ],
                   ),
 
-                  const SizedBox(height: 35),
+                  const SizedBox(
+                    height: 35,
+                  ),
 
                   // ================= ALERTS =================
 
                   Align(
 
-                    alignment: Alignment.centerLeft,
+                    alignment:
+                        Alignment.centerLeft,
 
                     child: Text(
 
@@ -404,23 +399,31 @@ class DoctorHomeContent extends StatelessWidget {
                         "التنبيهات الأخيرة",
                       ),
 
-                      style: const TextStyle(
+                      style:
+                          const TextStyle(
                         fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        fontWeight:
+                            FontWeight.bold,
                       ),
                     ),
                   ),
 
-                  const SizedBox(height: 18),
+                  const SizedBox(
+                    height: 18,
+                  ),
 
                   _buildAlertTile(
                     initials: "MA",
                     name: "Mohamed Ali",
+
                     alert:
                         "High Heart Rate Detected",
+
                     time: "12:30 AM",
+
                     color:
-                        const Color(0xFFFFD6D6),
+                        const Color(
+                            0xFFFFD6D6),
                   ),
 
                   const Divider(),
@@ -428,11 +431,15 @@ class DoctorHomeContent extends StatelessWidget {
                   _buildAlertTile(
                     initials: "SA",
                     name: "Sara Mohamed",
+
                     alert:
                         "Irregular Rhythm Detected",
+
                     time: "09:15 AM",
+
                     color:
-                        const Color(0xFFFFEDB5),
+                        const Color(
+                            0xFFFFEDB5),
                   ),
 
                   const Divider(),
@@ -440,10 +447,15 @@ class DoctorHomeContent extends StatelessWidget {
                   _buildAlertTile(
                     initials: "HA",
                     name: "Hesham Ahmed",
-                    alert: "High Blood Pressure",
+
+                    alert:
+                        "High Blood Pressure",
+
                     time: "Yesterday",
+
                     color:
-                        const Color(0xFFFFEDB5),
+                        const Color(
+                            0xFFFFEDB5),
                   ),
                 ],
               ),
@@ -468,7 +480,8 @@ class DoctorHomeContent extends StatelessWidget {
 
       width: 95,
 
-      padding: const EdgeInsets.symmetric(
+      padding:
+          const EdgeInsets.symmetric(
         vertical: 14,
       ),
 
@@ -488,12 +501,14 @@ class DoctorHomeContent extends StatelessWidget {
 
             title,
 
-            textAlign: TextAlign.center,
+            textAlign:
+                TextAlign.center,
 
             style: const TextStyle(
               color: Colors.white,
               fontSize: 11,
-              fontWeight: FontWeight.w500,
+              fontWeight:
+                  FontWeight.w500,
             ),
           ),
 
@@ -506,7 +521,8 @@ class DoctorHomeContent extends StatelessWidget {
             style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
-              fontWeight: FontWeight.bold,
+              fontWeight:
+                  FontWeight.bold,
             ),
           ),
         ],
@@ -529,7 +545,9 @@ class DoctorHomeContent extends StatelessWidget {
     return Container(
 
       margin:
-          const EdgeInsets.only(bottom: 18),
+          const EdgeInsets.only(
+        bottom: 18,
+      ),
 
       child: Row(
 
@@ -545,7 +563,8 @@ class DoctorHomeContent extends StatelessWidget {
               initials,
 
               style: const TextStyle(
-                fontWeight: FontWeight.bold,
+                fontWeight:
+                    FontWeight.bold,
                 color: Colors.brown,
               ),
             ),
@@ -558,7 +577,8 @@ class DoctorHomeContent extends StatelessWidget {
             child: Column(
 
               crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                  CrossAxisAlignment
+                      .start,
 
               children: [
 
@@ -566,8 +586,10 @@ class DoctorHomeContent extends StatelessWidget {
 
                   name,
 
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                  style:
+                      const TextStyle(
+                    fontWeight:
+                        FontWeight.bold,
                     fontSize: 15,
                   ),
                 ),
@@ -579,7 +601,8 @@ class DoctorHomeContent extends StatelessWidget {
                   alert,
 
                   style: TextStyle(
-                    color: Colors.grey.shade600,
+                    color: Colors
+                        .grey.shade600,
                     fontSize: 13,
                   ),
                 ),
@@ -591,7 +614,7 @@ class DoctorHomeContent extends StatelessWidget {
 
             time,
 
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.grey,
               fontSize: 12,
             ),

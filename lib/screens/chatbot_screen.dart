@@ -1,136 +1,408 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import '../providers/language_provider.dart';
-import 'header_clipper.dart';
 
-class ChatbotScreen extends StatefulWidget {
-  const ChatbotScreen({super.key});
+import '../providers/language_provider.dart';
+
+class ChatbotScreen
+    extends StatefulWidget {
+
+  const ChatbotScreen({
+    super.key,
+  });
 
   @override
-  State<ChatbotScreen> createState() => _ChatbotScreenState();
+  State<ChatbotScreen>
+      createState() =>
+          _ChatbotScreenState();
 }
 
-class _ChatbotScreenState extends State<ChatbotScreen> {
-  final TextEditingController controller = TextEditingController();
+class _ChatbotScreenState
+    extends State<
+        ChatbotScreen> {
 
-  List<Map<String, String>> messages = [
-    {"type": "bot", "text": "How old are you?"},
-    {"type": "user", "text": "I'm 45 years old."},
-    {"type": "bot", "text": "Do you have Hypertension?"},
-    {"type": "user", "text": "Yes, I do."},
+  final TextEditingController
+      controller =
+          TextEditingController();
+
+  List<Map<String, String>>
+      messages = [
+
+    {
+      "type": "bot",
+      "text":
+          "How old are you?",
+    },
+
+    {
+      "type": "user",
+      "text":
+          "I'm 45 years old.",
+    },
+
+    {
+      "type": "bot",
+      "text":
+          "Do you have Hypertension?",
+    },
+
+    {
+      "type": "user",
+      "text":
+          "Yes, I do.",
+    },
   ];
 
-  Map<String, Map<String, String>> tMap = {
+  Map<String, Map<String, String>>
+      tMap = {
+
     'en': {
-      'title': 'Health Assistant',
-      'hint': 'Type your message here...',
-      'got': 'Got it 👍',
+
+      'title':
+          'Health Assistant',
+
+      'hint':
+          'Type your message here...',
+
+      'got':
+          'Got it 👍',
     },
+
     'ar': {
-      'title': 'المساعد الصحي',
-      'hint': 'اكتب رسالتك هنا...',
-      'got': 'تم 👍',
+
+      'title':
+          'المساعد الصحي',
+
+      'hint':
+          'اكتب رسالتك هنا...',
+
+      'got':
+          'تم 👍',
     }
   };
 
-  void sendMessage(String Function(String) t) {
-    final text = controller.text.trim();
+  void sendMessage(
+
+    String Function(String) t,
+
+  ) {
+
+    final text =
+        controller.text.trim();
+
     if (text.isEmpty) return;
 
     setState(() {
-      messages.add({"type": "user", "text": text});
-      messages.add({"type": "bot", "text": t('got')});
+
+      messages.add({
+
+        "type": "user",
+
+        "text": text,
+      });
+
+      messages.add({
+
+        "type": "bot",
+
+        "text": t('got'),
+      });
+
       controller.clear();
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    final langProvider = Provider.of<LanguageProvider>(context);
-    final isArabic = langProvider.isArabic;
+  Widget build(
+    BuildContext context,
+  ) {
 
-    String t(String key) => tMap[isArabic ? 'ar' : 'en']![key]!;
+    final isArabic =
+        Provider.of<
+            LanguageProvider>(
+      context,
+    ).isArabic;
 
-    return Directionality(
-      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFEFEFEF),
-        body: SafeArea(
-          child: Column(
+    const primaryColor =
+        Color(0xFF4C82B4);
+
+    String t(String key) {
+
+      return tMap[
+          isArabic
+              ? 'ar'
+              : 'en']![key]!;
+    }
+
+    return AnnotatedRegion<
+        SystemUiOverlayStyle>(
+
+      value:
+          const SystemUiOverlayStyle(
+
+        statusBarColor:
+            Colors.transparent,
+
+        statusBarIconBrightness:
+            Brightness.light,
+      ),
+
+      child: Directionality(
+
+        textDirection:
+            isArabic
+                ? TextDirection.rtl
+                : TextDirection.ltr,
+
+        child: Scaffold(
+
+          backgroundColor:
+              const Color(
+            0xFFF2F2F2,
+          ),
+
+          body: Column(
             children: [
-              // HEADER مع زرار الرجوع ثابت ناحية الشمال
+
+              /// 🔵 HEADER
               Stack(
                 children: [
-                  ClipPath(
-                    clipper: HeaderClipper(),
-                    child: Container(
-                      height: 140,
-                      color: const Color(0xFF4C82B4),
-                      child: Center(
-                        child: Text(
-                          t('title'),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+
+                  Container(
+
+                    height: 170,
+
+                    width:
+                        double.infinity,
+
+                    decoration:
+                        BoxDecoration(
+  color:
+                            const Color(
+                          0xFF4C82B4,
+                        ),
+                      borderRadius:
+                          BorderRadius
+                              .vertical(
+
+                        bottom:
+                            Radius
+                                .elliptical(
+
+                          MediaQuery.of(
+                                  context)
+                              .size
+                              .width,
+
+                          60,
                         ),
                       ),
                     ),
                   ),
-                  // ✅ زرار الرجوع مثبت ناحية الشمال دائماً
+
+                  /// 🔙 BACK BUTTON
                   Positioned(
-                    top: 20,
-                    left: 10, // ثابت لليسار
-                    child: IconButton(
-                      // استخدمت ArrowBack العادي عشان يكون اتجاهه منطقي لليسار
-                      icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
-                      onPressed: () {
-                        Navigator.pop(context); 
+
+                    top: 80,
+
+                    left:
+                        isArabic
+                            ? null
+                            : 10,
+
+                    right:
+                        isArabic
+                            ? 10
+                            : null,
+
+                    child:
+                        IconButton(
+
+                      icon:
+                          const Icon(
+
+                        Icons
+                            .arrow_back_ios_new,
+
+                        color:
+                            Colors.white,
+
+                        size: 24,
+                      ),
+
+                      onPressed:
+                          () {
+
+                        Navigator.pop(
+                          context,
+                        );
                       },
+                    ),
+                  ),
+
+                  /// 📝 TITLE
+                  Positioned(
+
+                    top: 90,
+
+                    left: 0,
+                    right: 0,
+
+                    child: Center(
+
+                      child: Text(
+
+                        t('title'),
+
+                        style:
+                            const TextStyle(
+
+                          color:
+                              Colors.white,
+
+                          fontSize:
+                              22,
+
+                          fontWeight:
+                              FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
 
-              const SizedBox(height: 10),
+              const SizedBox(
+                height: 20,
+              ),
 
-              // قائمة الرسائل
+              /// 💬 MESSAGES
               Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    final msg = messages[index];
-                    return msg["type"] == "user"
-                        ? userMessage(msg["text"]!)
-                        : botMessage(msg["text"]!);
+
+                child:
+                    ListView.builder(
+
+                  padding:
+                      const EdgeInsets
+                          .all(
+                    16,
+                  ),
+
+                  itemCount:
+                      messages.length,
+
+                  itemBuilder:
+                      (
+                        context,
+                        index,
+                      ) {
+
+                    final msg =
+                        messages[
+                            index];
+
+                    return msg[
+                                "type"] ==
+                            "user"
+
+                        ? userMessage(
+                            msg["text"]!,
+                          )
+
+                        : botMessage(
+                            msg["text"]!,
+                          );
                   },
                 ),
               ),
 
-              // منطقة الإدخال
+              /// ✍️ INPUT AREA
               Container(
-                margin: const EdgeInsets.all(10),
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(20),
+
+                margin:
+                    const EdgeInsets
+                        .all(
+                  15,
                 ),
+
+                padding:
+                    const EdgeInsets
+                        .symmetric(
+                  horizontal: 15,
+                ),
+
+                decoration:
+                    BoxDecoration(
+
+                  color:
+                      Colors.white,
+
+                  borderRadius:
+                      BorderRadius
+                          .circular(
+                    18,
+                  ),
+
+                  boxShadow: [
+
+                    BoxShadow(
+
+                      color:
+                          Colors.black
+                              .withValues(
+                        alpha: 0.05,
+                      ),
+
+                      blurRadius:
+                          5,
+
+                      offset:
+                          const Offset(
+                        0,
+                        2,
+                      ),
+                    ),
+                  ],
+                ),
+
                 child: Row(
                   children: [
+
                     Expanded(
+
                       child: TextField(
-                        controller: controller,
-                        decoration: InputDecoration(
-                          hintText: t('hint'),
-                          border: InputBorder.none,
+
+                        controller:
+                            controller,
+
+                        decoration:
+                            InputDecoration(
+
+                          hintText:
+                              t('hint'),
+
+                          border:
+                              InputBorder
+                                  .none,
                         ),
                       ),
                     ),
+
                     IconButton(
-                      onPressed: () => sendMessage(t),
-                      icon: const Icon(Icons.send, color: Colors.blue),
+
+                      onPressed:
+                          () =>
+                              sendMessage(
+                        t,
+                      ),
+
+                      icon: Icon(
+
+                        Icons.send,
+
+                        color:
+                            primaryColor,
+                      ),
                     ),
                   ],
                 ),
@@ -142,42 +414,181 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     );
   }
 
-  Widget botMessage(String text) {
+  /// 🤖 BOT MESSAGE
+  Widget botMessage(
+    String text,
+  ) {
+
     return Row(
+      crossAxisAlignment:
+          CrossAxisAlignment.start,
+
       children: [
-        const Icon(Icons.smart_toy, color: Colors.blue),
-        const SizedBox(width: 8),
-        Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.blue[100],
-            borderRadius: BorderRadius.circular(12),
+
+        const CircleAvatar(
+
+          backgroundColor:
+              Color(
+            0xFFE8F1FA,
           ),
-          child: Text(text),
+
+          child: Icon(
+
+            Icons.smart_toy,
+
+            color:
+                Color(
+              0xFF4C82B4,
+            ),
+          ),
+        ),
+
+        const SizedBox(
+          width: 10,
+        ),
+
+        Flexible(
+
+          child: Container(
+
+            margin:
+                const EdgeInsets.only(
+              bottom: 12,
+            ),
+
+            padding:
+                const EdgeInsets.all(
+              14,
+            ),
+
+            decoration:
+                BoxDecoration(
+
+              color:
+                  Colors.white,
+
+              borderRadius:
+                  BorderRadius.circular(
+                15,
+              ),
+
+              boxShadow: [
+
+                BoxShadow(
+
+                  color:
+                      Colors.black
+                          .withValues(
+                    alpha: 0.03,
+                  ),
+
+                  blurRadius:
+                      4,
+
+                  offset:
+                      const Offset(
+                    0,
+                    2,
+                  ),
+                ),
+              ],
+            ),
+
+            child: Text(
+
+              text,
+
+              style:
+                  const TextStyle(
+                fontSize: 14,
+              ),
+            ),
+          ),
         ),
       ],
     );
   }
 
-  Widget userMessage(String text) {
+  /// 👤 USER MESSAGE
+  Widget userMessage(
+    String text,
+  ) {
+
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+
+      mainAxisAlignment:
+          MainAxisAlignment.end,
+
+      crossAxisAlignment:
+          CrossAxisAlignment.start,
+
       children: [
-        Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Text(
-            text,
-            style: const TextStyle(color: Colors.white),
+
+        Flexible(
+
+          child: Container(
+
+            margin:
+                const EdgeInsets.only(
+              bottom: 12,
+            ),
+
+            padding:
+                const EdgeInsets.all(
+              14,
+            ),
+
+            decoration:
+                BoxDecoration(
+
+              color:
+                  const Color(
+                0xFF4C82B4,
+              ),
+
+              borderRadius:
+                  BorderRadius.circular(
+                15,
+              ),
+            ),
+
+            child: Text(
+
+              text,
+
+              style:
+                  const TextStyle(
+
+                color:
+                    Colors.white,
+
+                fontSize: 14,
+              ),
+            ),
           ),
         ),
-        const SizedBox(width: 8),
-        const Icon(Icons.person, color: Colors.grey),
+
+        const SizedBox(
+          width: 20,
+        ),
+
+        const CircleAvatar(
+
+          backgroundColor:
+              Color(
+            0xFFE8F1FA,
+          ),
+
+          child: Icon(
+
+            Icons.person,
+
+            color:
+                Color(
+              0xFF4C82B4,
+            ),
+          ),
+        ),
       ],
     );
   }

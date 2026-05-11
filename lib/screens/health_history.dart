@@ -1,184 +1,559 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import '../providers/language_provider.dart';
-import '../screens/header_clipper.dart';
 
-class HealthHistoryScreen extends StatelessWidget {
-  const HealthHistoryScreen({super.key});
+import '../providers/language_provider.dart';
+
+class HealthHistoryScreen
+    extends StatelessWidget {
+
+  const HealthHistoryScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final langProvider = Provider.of<LanguageProvider>(context);
-    final isArabic = langProvider.isArabic;
 
-    Map<String, Map<String, String>> tMap = {
+    final isArabic =
+        Provider.of<LanguageProvider>(
+          context,
+        ).isArabic;
+
+    const primaryColor =
+        Color(0xFF3B67A1);
+
+    Map<String, Map<String, String>>
+        tMap = {
+
       'en': {
-        'title': 'Health History',
-        'timeline': 'Timeline',
-        'alerts': 'Alerts History',
-        'view': 'View ALL >',
+
+        'title':
+            'Health History',
+
+        'timeline':
+            'Timeline',
+
+        'alerts':
+            'Alerts History',
+
+        'view':
+            'View ALL >',
       },
+
       'ar': {
-        'title': 'تاريخ الحالة الصحية',
-        'timeline': 'الجدول الزمني',
-        'alerts': 'سجل التنبيهات',
-        'view': 'عرض الكل >',
+
+        'title':
+            'تاريخ الحالة الصحية',
+
+        'timeline':
+            'الجدول الزمني',
+
+        'alerts':
+            'سجل التنبيهات',
+
+        'view':
+            'عرض الكل >',
       }
     };
 
-    String t(String key) => tMap[isArabic ? 'ar' : 'en']![key]!;
+    String t(String key) {
 
-    List<Map<String, dynamic>> history = [
-      {"time": "9:00 AM", "status": "Normal", "warn": false},
-      {"time": "11:30 AM", "status": "High Heart Rate", "warn": true},
-      {"time": "2:00 PM", "status": "Low SpO₂", "warn": true},
+      return tMap[
+          isArabic
+              ? 'ar'
+              : 'en']![key]!;
+    }
+
+    List<Map<String, dynamic>>
+        history = [
+
+      {
+        "time": "9:00 AM",
+        "status": "Normal",
+        "warn": false,
+      },
+
+      {
+        "time": "11:30 AM",
+        "status":
+            "High Heart Rate",
+
+        "warn": true,
+      },
+
+      {
+        "time": "2:00 PM",
+        "status":
+            "Low SpO₂",
+
+        "warn": true,
+      },
     ];
 
-    List<Map<String, String>> alerts = [
-      {"title": "High Heart Rate", "value": "110 bpm"},
-      {"title": "Low SpO₂", "value": "88%"},
+    List<Map<String, String>>
+        alerts = [
+
+      {
+        "title":
+            "High Heart Rate",
+
+        "value":
+            "110 bpm",
+      },
+
+      {
+        "title":
+            "Low SpO₂",
+
+        "value":
+            "88%",
+      },
     ];
 
-    return Directionality(
-      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFEFEFEF),
-        body: SafeArea(
-          child: Column(
-            children: [
-              /// 🔵 HEADER
-              Stack(
-                children: [
-                  ClipPath(
-                    clipper: HeaderClipper(),
-                    child: Container(
-                      height: 140,
-                      color: const Color(0xFF4C82B4),
-                      child: Center(
-                        child: Text(
-                          t('title'),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+    return AnnotatedRegion<
+        SystemUiOverlayStyle>(
+
+      value:
+          const SystemUiOverlayStyle(
+
+        statusBarColor:
+            Colors.transparent,
+
+        statusBarIconBrightness:
+            Brightness.light,
+      ),
+
+      child: Directionality(
+
+        textDirection:
+            isArabic
+                ? TextDirection.rtl
+                : TextDirection.ltr,
+
+        child: Scaffold(
+
+          backgroundColor:
+              const Color(
+            0xFFF2F2F2,
+          ),
+
+          body: SafeArea(
+
+            child: Column(
+              children: [
+
+                /// 🔵 HEADER
+                Stack(
+                  children: [
+
+                    Container(
+
+                      height: 170,
+
+                      width:
+                          double.infinity,
+
+                      decoration:
+                          BoxDecoration(
+color:
+                            const Color(
+                          0xFF4C82B4,
+                        ),
+
+                        borderRadius:
+                            BorderRadius
+                                .vertical(
+
+                          bottom:
+                              Radius
+                                  .elliptical(
+
+                            MediaQuery.of(
+                                    context)
+                                .size
+                                .width,
+
+                            60,
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    top: 20,
-                    left: 10,
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ),
-                ],
-              ),
 
-              const SizedBox(height: 15),
+                    /// 🔙 BACK BUTTON
+                    Positioned(
 
-              /// 📈 TIMELINE
-              containerBox(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      t('timeline'),
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      top: 80,
+
+                      left:
+                          isArabic
+                              ? null
+                              : 10,
+
+                      right:
+                          isArabic
+                              ? 10
+                              : null,
+
+                      child:
+                          IconButton(
+
+                        icon: const Icon(
+
+                          Icons
+                              .arrow_back_ios_new,
+
+                          color:
+                              Colors.white,
+
+                          size: 24,
+                        ),
+
+                        onPressed:
+                            () =>
+                                Navigator.pop(
+                          context,
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 10),
-                    ...history.map((e) => timelineItem(
+
+                    /// 📝 TITLE
+                    Positioned(
+
+                      top: 95,
+
+                      left: 0,
+                      right: 0,
+
+                      child: Center(
+
+                        child: Text(
+
+                          t('title'),
+
+                          style:
+                              const TextStyle(
+
+                            color:
+                                Colors.white,
+
+                            fontSize:
+                                22,
+
+                            fontWeight:
+                                FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(
+                  height: 25,
+                ),
+
+                /// 📈 TIMELINE
+                containerBox(
+
+                  child: Column(
+
+                    crossAxisAlignment:
+                        CrossAxisAlignment
+                            .start,
+
+                    children: [
+
+                      Text(
+
+                        t('timeline'),
+
+                        style:
+                            const TextStyle(
+
+                          fontWeight:
+                              FontWeight.bold,
+
+                          fontSize: 16,
+                        ),
+                      ),
+
+                      const SizedBox(
+                        height: 12,
+                      ),
+
+                      ...history.map(
+
+                        (e) => timelineItem(
+
                           e["time"],
+
                           e["status"],
+
                           e["warn"],
-                        )),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 15),
-
-              /// 🔔 ALERTS
-              containerBox(
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          t('alerts'),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        const Spacer(),
-                        Text(
-                          t('view'),
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    ...alerts.map((e) => alertItem(e["title"]!, e["value"]!)),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              
-              // تم استبدال الـ Spacer والـ Navigation Container بمسافة بسيطة
-              const SizedBox(height: 20), 
-            ],
+
+                const SizedBox(
+                  height: 18,
+                ),
+
+                /// 🔔 ALERTS
+                containerBox(
+
+                  child: Column(
+                    children: [
+
+                      Row(
+                        children: [
+
+                          Text(
+
+                            t('alerts'),
+
+                            style:
+                                const TextStyle(
+
+                              fontWeight:
+                                  FontWeight.bold,
+
+                              fontSize: 16,
+                            ),
+                          ),
+
+                          const Spacer(),
+
+                          Text(
+
+                            t('view'),
+
+                            style:
+                                const TextStyle(
+
+                              color:
+                                  Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(
+                        height: 12,
+                      ),
+
+                      ...alerts.map(
+
+                        (e) => alertItem(
+
+                          e["title"]!,
+
+                          e["value"]!,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  // ================= Widgets البناء =================
+  /// 📦 BOX
+  Widget containerBox({
 
-  Widget containerBox({required Widget child}) {
+    required Widget child,
+
+  }) {
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+
+      padding:
+          const EdgeInsets.symmetric(
+        horizontal: 16,
+      ),
+
       child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(12),
+
+        width: double.infinity,
+
+        padding:
+            const EdgeInsets.all(
+          15,
         ),
+
+        decoration:
+            BoxDecoration(
+
+          color: Colors.white,
+
+          borderRadius:
+              BorderRadius.circular(
+            16,
+          ),
+
+          boxShadow: [
+
+            BoxShadow(
+
+              color:
+                  Colors.black
+                      .withValues(
+                alpha: 0.05,
+              ),
+
+              blurRadius: 5,
+
+              offset:
+                  const Offset(
+                0,
+                2,
+              ),
+            ),
+          ],
+        ),
+
         child: child,
       ),
     );
   }
 
-  Widget timelineItem(String time, String text, bool warning) {
+  /// 📈 TIMELINE ITEM
+  Widget timelineItem(
+
+    String time,
+    String text,
+    bool warning,
+
+  ) {
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+
+      padding:
+          const EdgeInsets.symmetric(
+        vertical: 6,
+      ),
+
       child: Row(
         children: [
+
           Icon(
+
             Icons.circle,
-            size: 8,
-            color: warning ? Colors.red : Colors.green,
+
+            size: 10,
+
+            color:
+                warning
+                    ? Colors.red
+                    : Colors.green,
           ),
-          const SizedBox(width: 10),
-          Text(time, style: const TextStyle(fontSize: 13)),
-          const SizedBox(width: 10),
-          Text(text, style: const TextStyle(fontSize: 13)),
+
+          const SizedBox(
+            width: 10,
+          ),
+
+          Text(
+
+            time,
+
+            style:
+                const TextStyle(
+              fontSize: 13,
+            ),
+          ),
+
+          const SizedBox(
+            width: 10,
+          ),
+
+          Expanded(
+
+            child: Text(
+
+              text,
+
+              style:
+                  const TextStyle(
+                fontSize: 13,
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget alertItem(String title, String sub) {
+  /// 🚨 ALERT ITEM
+  Widget alertItem(
+
+    String title,
+    String sub,
+
+  ) {
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
+
+      padding:
+          const EdgeInsets.symmetric(
+        vertical: 6,
+      ),
+
       child: Row(
         children: [
-          const Icon(Icons.warning, color: Colors.red, size: 20),
-          const SizedBox(width: 10),
+
+          const Icon(
+
+            Icons.warning,
+
+            color: Colors.red,
+
+            size: 22,
+          ),
+
+          const SizedBox(
+            width: 10,
+          ),
+
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+
+            crossAxisAlignment:
+                CrossAxisAlignment
+                    .start,
+
             children: [
-              Text(title, style: const TextStyle(fontSize: 14)),
-              Text(sub, style: const TextStyle(fontSize: 11, color: Colors.black54)),
+
+              Text(
+
+                title,
+
+                style:
+                    const TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+
+              Text(
+
+                sub,
+
+                style:
+                    const TextStyle(
+
+                  fontSize: 11,
+
+                  color:
+                      Colors.black54,
+                ),
+              ),
             ],
           ),
         ],

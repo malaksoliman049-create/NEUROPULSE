@@ -1,149 +1,410 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+
 import '../providers/language_provider.dart';
-import 'header_clipper.dart'; // تأكد من استيراد الكليبر الخاص بك
 
 class ProfileDoctorScreen extends StatelessWidget {
   const ProfileDoctorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final langProvider = Provider.of<LanguageProvider>(context);
+
+    final langProvider =
+        Provider.of<LanguageProvider>(context);
+
     final isArabic = langProvider.isArabic;
 
-    // دالة مساعدة للترجمة
-    String t(String en, String ar) => isArabic ? ar : en;
+    String t(String en, String ar) =>
+        isArabic ? ar : en;
 
-    return Directionality(
-      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Column(
-          children: [
-            /// 🔵 Header Section (Profile Doctor)
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                ClipPath(
-                  clipper: HeaderClipper(),
-                  child: Container(
-                    height: 220,
+    const Color primaryColor =
+        Color(0xFF4C82B4);
+
+    // ✅ نفس لون الـ HEADER
+    const Color iconColor =
+        Color(0xFF4C82B4);
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness:
+            Brightness.light,
+      ),
+
+      child: Directionality(
+
+        textDirection:
+            isArabic
+                ? TextDirection.rtl
+                : TextDirection.ltr,
+
+        child: Scaffold(
+
+          backgroundColor: Colors.white,
+
+          body: Column(
+            children: [
+
+              /// 🔵 HEADER
+              Stack(
+                children: [
+
+                  Container(
+
+                    height: 170,
                     width: double.infinity,
-                    color: const Color(0xFF4C82B4),
+
+                    decoration: BoxDecoration(
+
+                      color:
+                          const Color(
+                        0xFF4C82B4,
+                      ),
+
+                      borderRadius:
+                          BorderRadius.vertical(
+                        bottom:
+                            Radius.elliptical(
+                          MediaQuery.of(context)
+                              .size
+                              .width,
+                          60,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                Positioned(
-                  top: 50,
-                  left: isArabic ? null : 15,
-                  right: isArabic ? 15 : null,
-                  child: IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
+
+                  /// 🔙 BACK BUTTON
+                  Positioned(
+
+                    top: 80,
+
+                    left:
+                        isArabic
+                            ? null
+                            : 10,
+
+                    right:
+                        isArabic
+                            ? 10
+                            : null,
+
+                    child: IconButton(
+
+                      onPressed: () =>
+                          Navigator.pop(
+                        context,
+                      ),
+
+                      icon: const Icon(
+                        Icons
+                            .arrow_back_ios_new,
+                        color:
+                            Colors.white,
+                        size: 22,
+                      ),
+                    ),
                   ),
+
+                  /// 🩺 TITLE
+                  Positioned(
+
+                    top: 90,
+                    left: 0,
+                    right: 0,
+
+                    child: Center(
+                      child: Text(
+
+                        t(
+                          "Profile",
+                          "الملف الشخصي",
+                        ),
+
+                        style:
+                            const TextStyle(
+                          color:
+                              Colors.white,
+                          fontSize: 22,
+                          fontWeight:
+                              FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              /// 👨‍⚕️ IMAGE + INFO
+              Padding(
+
+                padding:
+                    const EdgeInsets.only(
+                  top: 35,
+                  left: 18,
+                  right: 18,
                 ),
-                Column(
+
+                child: Row(
+
+                  crossAxisAlignment:
+                      CrossAxisAlignment.center,
+
                   children: [
-                    const SizedBox(height: 60),
-                    const CircleAvatar(
-                      radius: 40,
-                      backgroundColor: Colors.white,
-                      child: Icon(Icons.person, size: 50, color: Color(0xFF4C82B4)),
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      "Jhon Williams", // يمكن جلب الاسم من الـ Backend لاحقاً
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+
+                    CircleAvatar(
+
+                      radius: 35,
+
+                      backgroundColor:
+                          Colors.blue.shade100,
+
+                      child: const Icon(
+                        Icons.person,
+                        size: 45,
+                        color: primaryColor,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    // زر التعديل (Edit) كما في الصورة
-                    GestureDetector(
-                      onTap: () {
-                        // أضف وظيفة التعديل هنا
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1A3D63),
-                          borderRadius: BorderRadius.circular(5),
+
+                    const SizedBox(
+                      width: 25,
+                    ),
+
+                    Column(
+
+                      crossAxisAlignment:
+                          CrossAxisAlignment
+                              .start,
+
+                      children: [
+
+                        const Text(
+
+                          "Dr. Mohamed Refaat",
+
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight:
+                                FontWeight.bold,
+                            color:
+                                primaryColor,
+                          ),
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.edit, color: Colors.white, size: 16),
-                            const SizedBox(width: 8),
-                            Text(
-                              t("Edit", "تعديل"),
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          ],
+
+                        const SizedBox(
+                          height: 6,
                         ),
-                      ),
+
+                        Text(
+
+                          t(
+                            "Internal Physician",
+                            "طبيب باطنة",
+                          ),
+
+                          style: TextStyle(
+                            color:
+                                Colors.grey
+                                    .shade700,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-
-            const SizedBox(height: 20),
-
-            /// 📄 Personal Information Section
-            Text(
-              t("Personal Information", "المعلومات الشخصية"),
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Serif',
-                color: Color(0xFF4C82B4),
               ),
-            ),
 
-            const SizedBox(height: 20),
-
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                children: [
-                  _buildInfoField(t("Specialization :", "التخصص :"), t("General", "عام")),
-                  _buildInfoField(t("Phone Number :", "رقم الهاتف :"), "01010734368"),
-                  _buildInfoField(t("Years of experience :", "سنوات الخبرة :"), t("10 years", "10 سنوات")),
-                  _buildInfoField(t("Email :", "البريد الإلكتروني :"), "Jhon@gmail.com"),
-                ],
+              const SizedBox(
+                height: 35,
               ),
-            ),
-          ],
+
+              /// 📄 INFO
+              Expanded(
+
+                child: Container(
+
+                  width: double.infinity,
+
+                  padding:
+                      const EdgeInsets.symmetric(
+                    horizontal: 22,
+                  ),
+
+                  child: ListView(
+
+                    children: [
+
+                      _buildInfoRow(
+
+                        icon: Icons.person,
+
+                        title: t(
+                          "Full Name",
+                          "الاسم الكامل",
+                        ),
+
+                        value:
+                            "Dr. Mohamed Refaat",
+
+                        iconColor:
+                            iconColor,
+                      ),
+
+                      _buildInfoRow(
+
+                        icon:
+                            Icons.medical_services,
+
+                        title: t(
+                          "Specialization",
+                          "التخصص",
+                        ),
+
+                        value: t(
+                          "General Physician",
+                          "طبيب عام",
+                        ),
+
+                        iconColor:
+                            iconColor,
+                      ),
+
+                      _buildInfoRow(
+
+                        icon: Icons.email,
+
+                        title: t(
+                          "Email",
+                          "البريد",
+                        ),
+
+                        value:
+                            "Mohamed@gmail.com",
+
+                        iconColor:
+                            iconColor,
+                      ),
+
+                      _buildInfoRow(
+
+                        icon: Icons.phone,
+
+                        title: t(
+                          "Phone Number",
+                          "رقم الهاتف",
+                        ),
+
+                        value:
+                            "+20 1010734368",
+
+                        iconColor:
+                            iconColor,
+                      ),
+
+                      _buildInfoRow(
+
+                        icon:
+                            Icons.work_history,
+
+                        title: t(
+                          "Years of experience",
+                          "سنوات الخبرة",
+                        ),
+
+                        value: t(
+                          "10 years",
+                          "10 سنوات",
+                        ),
+
+                        iconColor:
+                            iconColor,
+                      ),
+
+                      _buildInfoRow(
+
+                        icon:
+                            Icons.local_hospital,
+
+                        title: t(
+                          "Clinic / Hospital",
+                          "العيادة / المستشفى",
+                        ),
+
+                        value:
+                            "Al safa Medical Center",
+
+                        iconColor:
+                            iconColor,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  /// ويجت لبناء حقول المعلومات (مطابقة لتصميم الكروت في Figma)
-  Widget _buildInfoField(String label, String value) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 15),
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE3F2FD), // لون خلفية الكارت الفاتح
-        borderRadius: BorderRadius.circular(10),
+  Widget _buildInfoRow({
+
+    required IconData icon,
+    required String title,
+    required String value,
+    required Color iconColor,
+
+  }) {
+
+    return Padding(
+
+      padding:
+          const EdgeInsets.only(
+        bottom: 28,
       ),
+
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF4C82B4),
+
+          Icon(
+            icon,
+            color: iconColor,
+            size: 24,
+          ),
+
+          const SizedBox(
+            width: 12,
+          ),
+
+          Expanded(
+
+            child: Text(
+
+              title,
+
+              style:
+                  const TextStyle(
+                fontWeight:
+                    FontWeight.bold,
+                color:
+                    Color(0xFF5A6B7B),
+                fontSize: 15,
+              ),
             ),
           ),
+
           Text(
+
             value,
-            style: const TextStyle(
-              color: Colors.black87,
-              fontWeight: FontWeight.w500,
+
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 13,
+              fontWeight:
+                  FontWeight.w500,
             ),
           ),
         ],

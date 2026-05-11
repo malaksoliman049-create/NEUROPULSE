@@ -48,7 +48,7 @@ class RootApp extends StatelessWidget {
           child: child!,
         );
       },
-      home: const   DoctorDashboardScreen(),
+      home: const   HomeScreen(),
 
       // 📍 Routes (بدون chatbot)
       routes: {

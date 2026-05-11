@@ -13,61 +13,13 @@ class PatientDetails extends StatefulWidget {
 class _PatientDetailsState extends State<PatientDetails> {
   String pName = "Ali Ahmed";
   int pAge = 57;
-  String pId = "2598";
-  String riskLevel = "High";
-  String status = "Critical";
-  int heartRate = 145;
-  int spo2 = 82;
-
-  List<String> medicalHistoryEn = [
-    "Hypertension - Diagnosed 2025",
-    "Diabetes - Diagnosed 2024",
-    "Stroke - Diagnosed 2026"
-  ];
-
-  List<String> medicalHistoryAr = [
-    "ارتفاع ضغط الدم - تم التشخيص 2025",
-    "السكري - تم التشخيص 2024",
-    "سكتة دماغية - تم التشخيص 2026"
-  ];
-
-  String noteEn =
-      "Recommend ECG and repeat SPO2 measurement if elevated readings persist.";
-  String noteAr =
-      "يوصى بعمل رسم قلب وتكرار قياس نسبة الأكسجين إذا استمرت القراءات المرتفعة.";
 
   Map<String, Map<String, String>> localized = {
     'en': {
       'title': 'Patient Details',
-      'name': 'Name : ',
-      'age': 'Age : ',
-      'id': 'Id : ',
-      'risk': 'Risk Level : ',
-      'status': 'Status : ',
-      'hr': 'Heart Rate : ',
-      'spo2': 'Spo2 : ',
-      'history': 'Medical History : ',
-      'note': 'Note : ',
-      'update': 'Update Record',
-      'notify': 'Notify',
-      'high': 'High',
-      'critical': 'Critical'
     },
     'ar': {
       'title': 'تفاصيل المريض',
-      'name': 'الاسم : ',
-      'age': 'العمر : ',
-      'id': 'المعرف : ',
-      'risk': 'مستوى الخطر : ',
-      'status': 'الحالة : ',
-      'hr': 'نبض القلب : ',
-      'spo2': 'الأكسجين : ',
-      'history': 'التاريخ الطبي : ',
-      'note': 'ملاحظة : ',
-      'update': 'تحديث السجل',
-      'notify': 'إشعار',
-      'high': 'مرتفع',
-      'critical': 'حرج'
     }
   };
 
@@ -88,41 +40,56 @@ class _PatientDetailsState extends State<PatientDetails> {
         textDirection:
             isArabic ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: const Color(0xFFF7F7F7),
+
           body: Column(
             children: [
+
               // HEADER
               Stack(
-                alignment: Alignment.center,
                 children: [
+
                   Container(
-                    height: 140,
+                    height: 170,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF3B67A1),
+                      color: const Color(0xFF4C82B4),
                       borderRadius: BorderRadius.vertical(
                         bottom: Radius.elliptical(
-                            MediaQuery.of(context).size.width, 80),
+                          MediaQuery.of(context).size.width,
+                          60,
+                        ),
                       ),
                     ),
                   ),
+
+                  // BACK BUTTON
                   Positioned(
-                    top: 50,
-                    left: isArabic ? null : 15,
-                    right: isArabic ? 15 : null,
+                    top: 80,
+                    left: isArabic ? null : 10,
+                    right: isArabic ? 10 : null,
                     child: IconButton(
-                      icon: const Icon(Icons.arrow_back_ios,
-                          color: Colors.white),
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.white,
+                        size: 22,
+                      ),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ),
+
+                  // TITLE
                   Positioned(
-                    top: 60,
-                    child: Text(
-                      t('title'),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                    top: 90,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: Text(
+                        t('title'),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -131,59 +98,99 @@ class _PatientDetailsState extends State<PatientDetails> {
 
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 18),
                   child: Column(
                     children: [
-                      const SizedBox(height: 10),
-                      const Icon(Icons.account_circle,
-                          size: 120, color: Color(0xFF3B67A1)),
 
                       const SizedBox(height: 20),
 
-                      _infoRow(t('name'), pName, t('age'), pAge.toString()),
-                      _infoRow(t('id'), pId, t('risk'), t(riskLevel),
-                          valueColor2: Colors.red[900]),
-                      _infoRow(
-                        t('status'),
-                        t(status),
-                        t('hr'),
-                        "$heartRate BPM",
-                        valueColor1: Colors.red[900],
-                        valueColor2: Colors.red[900],
+                      // PROFILE
+                      Row(
+                        children: [
+
+                          CircleAvatar(
+                            radius: 35,
+                            backgroundColor:
+                                Colors.grey.shade300,
+
+                            // backgroundImage:
+                            // const AssetImage(
+                            //   "assets/images/patient.png",
+                            // ),
+                          ),
+
+                          const SizedBox(width: 15),
+
+                          Column(
+                            crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                            children: [
+
+                              Text(
+                                pName,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF3B67A1),
+                                ),
+                              ),
+
+                              const SizedBox(height: 4),
+
+                              Text(
+                                "$pAge Years",
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                      _infoRow(t('spo2'), "$spo2%", "", ""),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 25),
 
-                      _sectionTitle(t('history')),
-                      Column(
-                        children: (isArabic
-                                ? medicalHistoryAr
-                                : medicalHistoryEn)
-                            .map((item) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 4),
-                                  child: Row(
-                                    children: [
-                                      const Text("• "),
-                                      Expanded(child: Text(item))
-                                    ],
-                                  ),
-                                ))
-                            .toList(),
+                      // DIAGNOSIS
+                      _buildCard(
+                        Icons.assignment_outlined,
+                        "Diagnosis",
+                        "Hypertension , Arrhythmia",
                       ),
 
-                      const SizedBox(height: 20),
-
-                      _sectionTitle(t('note')),
-                      Text(isArabic ? noteAr : noteEn),
-
-                      const SizedBox(height: 30),
-
-                      _actionButton(t('update')),
                       const SizedBox(height: 15),
-                      _actionButton(t('notify'), width: 180),
 
-                      const SizedBox(height: 20),
+                      // VITALS
+                      _buildCard(
+                        Icons.favorite_border,
+                        "Latest Vitals",
+                        "• Heart Rate        145 Bpm\n"
+                        "• Spo2                  82%\n"
+                        "• Heart disease    Yes",
+                      ),
+
+                      const SizedBox(height: 15),
+
+                      // ALERTS
+                      _buildCard(
+                        Icons.warning_amber_rounded,
+                        "Recent Alerts",
+                        "• High Heart Rate detected\n"
+                        "• High Spo2",
+                        iconColor: Colors.red,
+                      ),
+
+                      const SizedBox(height: 15),
+
+                      // NOTES
+                      _buildCard(
+                        Icons.notes,
+                        "Notes",
+                        "Patient needs continuous monitoring and follow up",
+                      ),
+
+                      const SizedBox(height: 25),
                     ],
                   ),
                 ),
@@ -195,38 +202,68 @@ class _PatientDetailsState extends State<PatientDetails> {
     );
   }
 
-  Widget _infoRow(String l1, String v1, String l2, String v2,
-      {Color? valueColor1, Color? valueColor2}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        children: [
-          Expanded(child: Text("$l1$v1")),
-          if (l2.isNotEmpty) Expanded(child: Text("$l2$v2")),
+  Widget _buildCard(
+    IconData icon,
+    String title,
+    String content, {
+    Color iconColor = const Color(0xFF3B67A1),
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(15),
+
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
         ],
       ),
-    );
-  }
 
-  Widget _sectionTitle(String title) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Text(title,
-          style: const TextStyle(fontWeight: FontWeight.bold)),
-    );
-  }
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
 
-  Widget _actionButton(String label, {double? width}) {
-    return Container(
-      width: width ?? 150,
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFF6A859A),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Center(
-        child: Text(label,
-            style: const TextStyle(color: Colors.white)),
+          Icon(
+            icon,
+            color: iconColor,
+            size: 32,
+          ),
+
+          const SizedBox(width: 12),
+
+          Expanded(
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
+              children: [
+
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+
+                const SizedBox(height: 6),
+
+                Text(
+                  content,
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    height: 1.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

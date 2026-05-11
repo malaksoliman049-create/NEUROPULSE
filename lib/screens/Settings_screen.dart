@@ -1,146 +1,424 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import '../providers/language_provider.dart';
-import 'header_clipper.dart';
 
-class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key});
+import '../providers/language_provider.dart';
+
+class SettingsScreen
+    extends StatefulWidget {
+
+  const SettingsScreen({
+    super.key,
+  });
 
   @override
-  _SettingsScreenState createState() => _SettingsScreenState();
+  State<SettingsScreen>
+      createState() =>
+          _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState
+    extends State<
+        SettingsScreen> {
+
   bool isConnected = true;
+
   String lastSyncValue = "2";
 
-  Map<String, Map<String, String>> localizedValues = {
+  Map<String, Map<String, String>>
+      localizedValues = {
+
     'en': {
-      'settings': 'Settings',
-      'connected': 'Device Connected',
-      'disconnected': 'Device Disconnected',
-      'lastSync': 'Last Sync : ',
-      'minutesAgo': ' min ago',
-      'sync': 'Sync Now',
-      'logout': 'Log-Out',
+
+      'settings':
+          'Settings',
+
+      'connected':
+          'Device Connected',
+
+      'disconnected':
+          'Device Disconnected',
+
+      'lastSync':
+          'Last Sync : ',
+
+      'minutesAgo':
+          ' min ago',
+
+      'sync':
+          'Sync Now',
+
+      'logout':
+          'Log-Out',
     },
+
     'ar': {
-      'settings': 'الإعدادات',
-      'connected': 'الجهاز متصل',
-      'disconnected': 'الجهاز غير متصل',
-      'lastSync': 'آخر مزامنة : ',
-      'minutesAgo': ' دقيقة مضت',
-      'sync': 'مزامنة الآن',
-      'logout': 'تسجيل الخروج',
+
+      'settings':
+          'الإعدادات',
+
+      'connected':
+          'الجهاز متصل',
+
+      'disconnected':
+          'الجهاز غير متصل',
+
+      'lastSync':
+          'آخر مزامنة : ',
+
+      'minutesAgo':
+          ' دقيقة مضت',
+
+      'sync':
+          'مزامنة الآن',
+
+      'logout':
+          'تسجيل الخروج',
     }
   };
 
   @override
-  Widget build(BuildContext context) {
-    final langProvider = Provider.of<LanguageProvider>(context);
-    final isArabic = langProvider.isArabic;
-    final primaryColor = const Color(0xFF4C82B4);
+  Widget build(
+    BuildContext context,
+  ) {
 
-    String t(String key) => localizedValues[isArabic ? 'ar' : 'en']![key]!;
+    final isArabic =
+        Provider.of<
+            LanguageProvider>(
+      context,
+    ).isArabic;
 
-    return Directionality(
-      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea( // أضفنا SafeArea لضمان اتساق المسافات في أعلى الشاشة
-          child: Column(
+    const primaryColor =
+        Color(0xFF4C82B4);
+
+    String t(String key) {
+
+      return localizedValues[
+          isArabic
+              ? 'ar'
+              : 'en']![key]!;
+    }
+
+    return AnnotatedRegion<
+        SystemUiOverlayStyle>(
+
+      value:
+          const SystemUiOverlayStyle(
+
+        statusBarColor:
+            Colors.transparent,
+
+        statusBarIconBrightness:
+            Brightness.light,
+      ),
+
+      child: Directionality(
+
+        textDirection:
+            isArabic
+                ? TextDirection.rtl
+                : TextDirection.ltr,
+
+        child: Scaffold(
+
+          backgroundColor:
+              Colors.white,
+
+          body: Column(
             children: [
-              /// 🔵 Header Section
+
+              /// 🔵 HEADER
               Stack(
                 children: [
-                  ClipPath(
-                    clipper: HeaderClipper(),
-                    child: Container(
-                      height: 140, // جعلنا الارتفاع 140 ليطابق الكود الآخر
-                      width: double.infinity,
-                      color: primaryColor,
-                      child: Center(
-                        child: Text(
-                          t('settings'),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20, // حجم الخط 20 ليطابق الكود الآخر
-                            fontWeight: FontWeight.bold,
-                          ),
+
+                  Container(
+
+                    height: 170,
+
+                    width:
+                        double.infinity,
+
+                    decoration:
+                        BoxDecoration(
+  color:
+                            const Color(
+                          0xFF4C82B4,
+                        ),
+                      borderRadius:
+                          BorderRadius
+                              .vertical(
+
+                        bottom:
+                            Radius
+                                .elliptical(
+
+                          MediaQuery.of(
+                                  context)
+                              .size
+                              .width,
+
+                          60,
                         ),
                       ),
                     ),
                   ),
-                  
-                  /// 🔙 Back Button (تم تعديله ليطابق الكود المطلوب تماماً)
+
+                  /// 🔙 BACK BUTTON
                   Positioned(
-                    top: 20,
-                    left: 10,
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
-                      onPressed: () => Navigator.pop(context),
+
+                    top: 80,
+
+                    left:
+                        isArabic
+                            ? null
+                            : 10,
+
+                    right:
+                        isArabic
+                            ? 10
+                            : null,
+
+                    child:
+                        IconButton(
+
+                      icon:
+                          const Icon(
+
+                        Icons
+                            .arrow_back_ios_new,
+
+                        color:
+                            Colors.white,
+
+                        size: 24,
+                      ),
+
+                      onPressed:
+                          () =>
+                              Navigator.pop(
+                        context,
+                      ),
+                    ),
+                  ),
+
+                  /// 📝 TITLE
+                  Positioned(
+
+                    top: 90,
+
+                    left: 0,
+                    right: 0,
+
+                    child: Center(
+
+                      child: Text(
+
+                        t(
+                          'settings',
+                        ),
+
+                        style:
+                            const TextStyle(
+
+                          color:
+                              Colors.white,
+
+                          fontSize:
+                              22,
+
+                          fontWeight:
+                              FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
 
-              /// 📱 Main Content Area
               Expanded(
+
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
+
+                  padding:
+                      const EdgeInsets
+                          .symmetric(
+                    horizontal: 25,
+                  ),
+
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+
+                    mainAxisAlignment:
+                        MainAxisAlignment
+                            .center,
+
                     children: [
-                      /// 🟢 Status Card
+
+                      /// 📱 STATUS CARD
                       Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE3F2FD).withValues(alpha: 0.7),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: primaryColor.withValues(alpha: 0.1)),
+
+                        width:
+                            double.infinity,
+
+                        padding:
+                            const EdgeInsets
+                                .symmetric(
+
+                          vertical: 35,
+                          horizontal: 20,
                         ),
-                        child: Column(
-                          children: [
-                            Icon(
-                              isConnected ? Icons.bluetooth_connected : Icons.bluetooth_disabled,
-                              size: 60,
-                              color: isConnected ? Colors.green[700] : Colors.red[400],
-                            ),
-                            const SizedBox(height: 15),
-                            Text(
-                              isConnected ? t('connected') : t('disconnected'),
-                              style: TextStyle(
-                                color: isConnected ? Colors.green[700] : Colors.red,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
+
+                        decoration:
+                            BoxDecoration(
+
+                          color:
+                              const Color(
+                            0xFFE8F1FA,
+                          ),
+
+                          borderRadius:
+                              BorderRadius
+                                  .circular(
+                            20,
+                          ),
+
+                          boxShadow: [
+
+                            BoxShadow(
+
+                              color:
+                                  Colors.black
+                                      .withValues(
+                                alpha:
+                                    0.05,
+                              ),
+
+                              blurRadius:
+                                  5,
+
+                              offset:
+                                  const Offset(
+                                0,
+                                2,
                               ),
                             ),
-                            const SizedBox(height: 10),
+                          ],
+                        ),
+
+                        child: Column(
+                          children: [
+
+                            Icon(
+
+                              isConnected
+
+                                  ? Icons
+                                      .bluetooth_connected
+
+                                  : Icons
+                                      .bluetooth_disabled,
+
+                              size: 65,
+
+                              color:
+                                  isConnected
+
+                                      ? Colors
+                                          .green
+                                          .shade700
+
+                                      : Colors
+                                          .red,
+                            ),
+
+                            const SizedBox(
+                              height: 15,
+                            ),
+
                             Text(
-                              "${t('lastSync')} $lastSyncValue ${t('minutesAgo')}",
-                              style: const TextStyle(color: Colors.blueGrey, fontSize: 16),
+
+                              isConnected
+
+                                  ? t(
+                                      'connected',
+                                    )
+
+                                  : t(
+                                      'disconnected',
+                                    ),
+
+                              style:
+                                  TextStyle(
+
+                                color:
+                                    isConnected
+
+                                        ? Colors
+                                            .green
+                                            .shade700
+
+                                        : Colors
+                                            .red,
+
+                                fontSize:
+                                    24,
+
+                                fontWeight:
+                                    FontWeight
+                                        .bold,
+                              ),
+                            ),
+
+                            const SizedBox(
+                              height: 10,
+                            ),
+
+                            Text(
+
+                              "${t('lastSync')}$lastSyncValue${t('minutesAgo')}",
+
+                              style:
+                                  const TextStyle(
+
+                                color:
+                                    Colors
+                                        .blueGrey,
+
+                                fontSize:
+                                    15,
+                              ),
                             ),
                           ],
                         ),
                       ),
 
-                      const SizedBox(height: 40),
-
-                      /// 🔄 Sync Button
-                      _buildMenuButton(
-                        t('sync'), 
-                        primaryColor, 
-                        onTap: () {}
+                      const SizedBox(
+                        height: 45,
                       ),
-                      
-                      const SizedBox(height: 15),
 
-                      /// 🔴 Logout Button
+                      /// 🔄 SYNC BUTTON
                       _buildMenuButton(
-                        t('logout'), 
-                        const Color(0xFFD32F2F), 
-                        onTap: () {}
+
+                        t('sync'),
+
+                        primaryColor,
+
+                        onTap: () {},
+                      ),
+
+                      const SizedBox(
+                        height: 18,
+                      ),
+
+                      /// 🔴 LOGOUT BUTTON
+                      _buildMenuButton(
+
+                        t('logout'),
+
+                        const Color(
+                          0xFFD32F2F,
+                        ),
+
+                        onTap: () {},
                       ),
                     ],
                   ),
@@ -153,33 +431,81 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  /// 📦 Button Widget
-  Widget _buildMenuButton(String label, Color color, {required VoidCallback onTap}) {
+  /// 📦 BUTTON
+  Widget _buildMenuButton(
+
+    String label,
+    Color color, {
+
+    required VoidCallback onTap,
+
+  }) {
+
     return InkWell(
+
       onTap: onTap,
-      borderRadius: BorderRadius.circular(15),
+
+      borderRadius:
+          BorderRadius.circular(
+        15,
+      ),
+
       child: Container(
+
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        decoration: BoxDecoration(
+
+        padding:
+            const EdgeInsets.symmetric(
+          vertical: 16,
+        ),
+
+        decoration:
+            BoxDecoration(
+
           color: color,
-          borderRadius: BorderRadius.circular(15),
+
+          borderRadius:
+              BorderRadius.circular(
+            15,
+          ),
+
           boxShadow: [
+
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
+
+              color:
+                  Colors.black
+                      .withValues(
+                alpha: 0.08,
+              ),
+
               blurRadius: 10,
-              offset: const Offset(0, 4),
+
+              offset:
+                  const Offset(
+                0,
+                4,
+              ),
             ),
           ],
         ),
+
         child: Center(
+
           child: Text(
+
             label,
-            style: const TextStyle(
-              color: Colors.white,
+
+            style:
+                const TextStyle(
+
+              color:
+                  Colors.white,
+
               fontSize: 18,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.5,
+
+              fontWeight:
+                  FontWeight.bold,
             ),
           ),
         ),
